@@ -1,0 +1,25 @@
+{
+  "name": "JS-Applications-Team-RamosFizz",
+  "version": "0.0.1",
+  "description": "Public repository for the realization of a javascript application with backend logic and OOP design practices",
+  "main": "index.js",
+  "dependencies": {
+    "handlebars": "^3.0.3",
+    "jade": "^1.11.0",
+    "toastr": "^2.1.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Pip3r4o/JS-Applications-Team-RamosFizz"
+  },
+  "author": "RamosFizz",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Pip3r4o/JS-Applications-Team-RamosFizz/issues"
+  },
+  "homepage": "https://github.com/Pip3r4o/JS-Applications-Team-RamosFizz"
+}

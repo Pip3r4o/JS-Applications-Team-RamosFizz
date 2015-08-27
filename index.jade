@@ -1,0 +1,31 @@
+html
+    head
+        meta(charset="utf-8")
+        title Sharing is Caring - The travel sharing App
+        link(rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css")
+        link(rel="stylesheet" href="node_modules/toastr/build/toastr.css")
+        link(rel="stylesheet" href="css/styles.css")
+        script(type="text/javascript" src="bower_components/jquery/dist/jquery.js")
+        script(type="text/javascript" src="bower_components/bootstrap/dist/js/bootstrap.js")
+        script(type="text/javascript" src="bower_components/parse-1.5.0/index.js")
+        script(type="text/javascript" src="node_modules/toastr/toastr.js")
+        script(type="text/javascript" src="node_modules/handlebars/lib/handlebars.js")
+    body
+
+        div#header
+            div.blog-masthead
+                div.container
+                    nav.blog-nav
+                        a(href="index.html").blog-nav-item.active Posts
+                        a(href="createPost.html").blog-nav-item Create Post
+
+        div#mainWindow
+            div#mainContent
+
+        div#footer
+            footer.footer
+                .container
+                    p.text-muted.text-center This is the page's sticky footer - Pending an update - file layout.jade
+                    p.text-info.text-center Powered by Bootstrap
+
+        script(type="text/javascript" src="scripts/scripts.js")
