@@ -1,32 +1,22 @@
 Parse.initialize("oXLbvSKFI0HQJAT5QCpStZbr0Lx5Upt4j6MJFh92", "KAtLgD0vTTYionS73fIxYY1XYWGedKaUgXvzFd26");
 
-/*
- function locationHashChanged() {
- if (location.hash === "#home") {
- renderHomeView();
- } else if (location.hash === "#posts") {
- renderPostsView();
- } else if (location.hash === "#login") {
- renderLoginView();
- } else {
- renderHomeView();
- }
- }
 
- window.onhashchange = locationHashChanged;
+function locationHashChanged() {
+    if (!Parse.User.current()) {
+        location.assign('#');
+        return;
+    }
+    if (location.hash === "#posts") {
+        renderPostsView();
+    } else if (location.hash === "#makepost") {
+        renderCreatePostView();
+    } else {
+        renderPostsView();
+    }
+}
 
- function renderHomeView() {
+window.onhashchange = locationHashChanged;
 
- }
-
- function renderPostsView() {
-
- }
-
- function renderLoginView() {
-
- }
- */
 
 var sgnOutBtn = $('#btnsgnout').click(function () {
     Parse.User.logOut().then(
@@ -47,11 +37,9 @@ var headers  = {
 var queryURL = "https://api.parse.com/1/classes/";
 var data;
 
-
 if (!Parse.User.current()) {
     renderLoginView();
 } else {
-    //renderCreatePostView();
     renderPostsView();
 }
 
@@ -62,6 +50,30 @@ function renderRegisterView() {
     });
     sgnOutBtn.hide();
 }
+
+var Post = Parse.Object.extend('Post', {
+    create: function (author, title, contact, from, to, day, seats, price) {
+        this.save({
+            'user': Parse.User.current(),
+            'author': author,
+            'title': title,
+            'contact': contact,
+            'from': from,
+            'to': to,
+            'day': day,
+            'seats': seats,
+            'price': price
+        }, {
+            success: function (post) {
+                toastr.info('You added a new post: ' + post.get('title'));
+            },
+            error: function (post, error) {
+                toastr.error(post);
+                toastr.error(error);
+            }
+        });
+    }
+});
 
 function renderLoginView() {
     $('#mainContent').load('partials/login.html', function () {
@@ -78,7 +90,12 @@ function renderPostsView() {
 }
 
 function renderCreatePostView() {
-    $('#mainContent').load('partials/createPost.html');
+    $('#mainContent').load('partials/createPost.html', function () {
+        $('#btnrst').click(function () {
+            $('#createpostcntnr form').trigger("reset");
+        });
+        $('#createpostcntnr').submit(createPost);
+    });
 }
 
 function signInUser() {
@@ -102,7 +119,6 @@ function signInUser() {
     return false;
 }
 
-
 function signUpUser() {
     var emailRegEx = /\b[A-Z0-9._%+-]+@(?:[A-Z0-9-]+\.)+[A-Z]{2,4}\b/ig;
     var username   = $('#registerUsername').val(),
@@ -111,7 +127,6 @@ function signUpUser() {
         email      = $('#registerEmail').val(),
         password   = $('#registerPassword').val();
     var deferred   = new Promise(function (resolve, reject) {
-
         if (!(emailRegEx.exec(email))) {
             reject('Invalid Email!');
             return;
@@ -148,5 +163,50 @@ function signUpUser() {
         function (error) {
             toastr.error(error);
         });
+    return false;
+}
+
+function createPost() {
+    var author  = Parse.User.current().get('username'),
+        title   = $('#titleinpt').val(),
+        contact = $('#contactinpt').val(),
+        from    = $('#fromslct option:selected').text(),
+        to      = $('#toslct option:selected').text(),
+        day     = new Date($('#yy option:selected').text(),
+                    $('#mm option:selected').text(),
+                    $('#dd option:selected').text(),
+                    $('#hourslct option:selected').text(),
+                    $('#minuteslct option:selected').text(), 0),
+        seats   = $('#seatsslct option:selected').text(),
+        price   = $('#priceslct option:selected').text(),
+        created = new Date();
+
+    var numberRegEx = /^(\+359|0)\s?8(\d{2}\s\d{6}|[789]\d{7})$/igm;
+
+    if (day - created < 0) {
+        toastr.error('You cannot create a post that is due previous date!');
+        return false;
+    }
+
+    if (from === to) {
+        toastr.error('You must travel from/to a town different to the place of departure!');
+        return false;
+    }
+
+    if (!(numberRegEx.exec(contact))) {
+        toastr.error('Mobile number is not in a valid BG format!');
+        return false;
+    }
+
+    if (title.length < 10 || title.length > 30) {
+        toastr.info('Title is too short or too long, converted to default format!');
+        title = from + ' - ' + to + ' [' + day.getDate() + '/' + day.getMonth() + '/' + day.getFullYear() + '] ' + ' (' + author + ')';
+    }
+
+    var post = new Post();
+    post.create(author, title, contact, from, to, day, seats, price);
+
+    location.assign('#posts');
+
     return false;
 }
