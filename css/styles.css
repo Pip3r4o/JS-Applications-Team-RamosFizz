@@ -242,3 +242,23 @@ h6, .h6 {
     padding: 10px;
     border: 2px solid #aaf;
 }
+
+#createpostcntnr {
+    width: 40%;
+}
+
+#createpostcntnr input,
+#createpostcntnr select,
+#createpostcntnr .blog-post-title,
+#timeslct {
+    margin-bottom: 15px;
+}
+
+#createpostcntnr input {
+    margin-left: 5px;
+}
+
+#createpostcntnr button {
+    padding-bottom: 5px;
+    margin-bottom: -15px;
+}

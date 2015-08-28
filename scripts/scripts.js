@@ -15,18 +15,29 @@ Parse.initialize("oXLbvSKFI0HQJAT5QCpStZbr0Lx5Upt4j6MJFh92", "KAtLgD0vTTYionS73f
 
  window.onhashchange = locationHashChanged;
 
-function renderHomeView() {
+ function renderHomeView() {
 
-}
+ }
 
-function renderPostsView() {
+ function renderPostsView() {
 
-}
+ }
 
-function renderLoginView() {
+ function renderLoginView() {
 
-}
+ }
  */
+
+var sgnOutBtn = $('#btnsgnout').click(function () {
+    Parse.User.logOut().then(
+        function () {
+            toastr.success('You successfully logged out!');
+            renderLoginView();
+        },
+        function () {
+            toastr.error('There was an error while logging out! :(')
+        });
+});
 
 var headers  = {
     "X-Parse-Application-Id": "oXLbvSKFI0HQJAT5QCpStZbr0Lx5Upt4j6MJFh92",
@@ -40,25 +51,34 @@ var data;
 if (!Parse.User.current()) {
     renderLoginView();
 } else {
+    //renderCreatePostView();
     renderPostsView();
 }
 
 function renderRegisterView() {
-    $('#mainContent').load('partials/register.html', function() {
+    $('#mainContent').load('partials/register.html', function () {
         $('#signup').submit(signUpUser);
         $('#btnsgnin').click(renderLoginView);
     });
+    sgnOutBtn.hide();
 }
 
 function renderLoginView() {
-    $('#mainContent').load('partials/login.html', function() {
+    $('#mainContent').load('partials/login.html', function () {
         $('#signin').submit(signInUser);
-        $('#btnrgstr').click(renderRegisterView)
+        $('#btnrgstr').click(renderRegisterView);
     });
+    sgnOutBtn.hide();
 }
 
 function renderPostsView() {
     $('#mainContent').load('partials/posts.html');
+
+    sgnOutBtn.show();
+}
+
+function renderCreatePostView() {
+    $('#mainContent').load('partials/createPost.html');
 }
 
 function signInUser() {
