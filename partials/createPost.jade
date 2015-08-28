@@ -1,0 +1,56 @@
+.container.panel-body#createpostcntnr
+    h3.blog-post-title Create a travel post
+    form.input-group-sm.text-center
+        .row
+            .col-md-6
+                label(for="titleinpt").text-info Title:
+                input(type="text" required)#titleinpt.input-lg
+            .col-md-6
+                label(for="contactinpt").text-info Mobile:
+                input(type="text" required)#contactinpt.input-lg
+        .row
+            .col-sm-6
+                label(for="fromslct").text-info From:
+                select.form-control#fromslct
+                    option Sofia
+                    option Burgas
+                    option Varna
+                    option Plovdiv
+                    option Ruse
+            .col-sm-6
+                label(for="toslct").text-info To:
+                select.form-control#toslct
+                    option Sofia
+                    option Burgas
+                    option Varna
+                    option Plovdiv
+                    option Ruse
+
+        label(for="timeslct").text-info Time of departure:
+        .container#timeslct
+
+        .row
+            .col-sm-5
+                label(for="seatsslct").text-info Available seats:
+                select.form-control#seatsslct
+                    option 1
+                    option 2
+                    option 3
+                    option 4
+                    option 5
+            .col-sm-2
+            .col-sm-5
+                label(for="seatsslct").text-info Price per seat:
+                select.form-control#seatsslct
+                    option Free
+                    option 10 BGN
+                    option 15 BGN
+                    option 20 BGN
+                    option 25 BGN
+                    option 30 BGN
+                    option 5 EUR
+                    option 10 EUR
+                    option 15 EUR
+                    option 20 EUR
+
+        button.btn-block.btn-info Submit Post
