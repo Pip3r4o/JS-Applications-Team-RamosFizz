@@ -1,6 +1,5 @@
 Parse.initialize("oXLbvSKFI0HQJAT5QCpStZbr0Lx5Upt4j6MJFh92", "KAtLgD0vTTYionS73fIxYY1XYWGedKaUgXvzFd26");
 
-
 function locationHashChanged() {
     if (!Parse.User.current()) {
         location.assign('#');
@@ -10,6 +9,8 @@ function locationHashChanged() {
         renderPostsView();
     } else if (location.hash === "#makepost") {
         renderCreatePostView();
+    } else if (location.hash === '#user') {
+        renderUserView();
     } else {
         renderPostsView();
     }
@@ -17,6 +18,23 @@ function locationHashChanged() {
 
 window.onhashchange = locationHashChanged;
 
+toastr.options = {
+    "closeButton": false,
+    "debug": false,
+    "newestOnTop": true,
+    "progressBar": false,
+    "positionClass": "toast-top-center",
+    "preventDuplicates": false,
+    "onclick": null,
+    "showDuration": "300",
+    "hideDuration": "1000",
+    "timeOut": "5000",
+    "extendedTimeOut": "1000",
+    "showEasing": "swing",
+    "hideEasing": "linear",
+    "showMethod": "fadeIn",
+    "hideMethod": "fadeOut"
+};
 
 var sgnOutBtn = $('#btnsgnout').click(function () {
     Parse.User.logOut().then(
@@ -28,6 +46,7 @@ var sgnOutBtn = $('#btnsgnout').click(function () {
             toastr.error('There was an error while logging out! :(')
         });
 });
+var userBtn = $('#user');
 
 var headers  = {
     "X-Parse-Application-Id": "oXLbvSKFI0HQJAT5QCpStZbr0Lx5Upt4j6MJFh92",
@@ -48,6 +67,7 @@ function renderRegisterView() {
         $('#signup').submit(signUpUser);
         $('#btnsgnin').click(renderLoginView);
     });
+    userBtn.hide();
     sgnOutBtn.hide();
 }
 
@@ -80,13 +100,26 @@ function renderLoginView() {
         $('#signin').submit(signInUser);
         $('#btnrgstr').click(renderRegisterView);
     });
+    userBtn.hide();
     sgnOutBtn.hide();
 }
 
 function renderPostsView() {
+    userBtn.show();
+    sgnOutBtn.show();
+
     $('#mainContent').load('partials/posts.html');
 
-    sgnOutBtn.show();
+
+    var query = new Parse.Query('Post');
+    var data;
+    query.ascending('day');
+    query.greaterThan('day', new Date());
+    query.find().then(function(res) {
+        console.log(res);
+    }, function(err) {
+        console.log(err);
+    })
 }
 
 function renderCreatePostView() {
@@ -96,6 +129,11 @@ function renderCreatePostView() {
         });
         $('#createpostcntnr').submit(createPost);
     });
+}
+
+function renderUserView() {
+    $('#mainContent').load('partials/user.html');
+    getPostsByUser();
 }
 
 function signInUser() {
@@ -173,7 +211,7 @@ function createPost() {
         from    = $('#fromslct option:selected').text(),
         to      = $('#toslct option:selected').text(),
         day     = new Date($('#yy option:selected').text(),
-                    $('#mm option:selected').text(),
+                    ($('#mm option:selected').text()*1) - 1,
                     $('#dd option:selected').text(),
                     $('#hourslct option:selected').text(),
                     $('#minuteslct option:selected').text(), 0),
@@ -200,7 +238,7 @@ function createPost() {
 
     if (title.length < 10 || title.length > 30) {
         toastr.info('Title is too short or too long, converted to default format!');
-        title = from + ' - ' + to + ' [' + day.getDate() + '/' + day.getMonth() + '/' + day.getFullYear() + '] ' + ' (' + author + ')';
+        title = from + ' - ' + to + ' [' + day.getDate() + '/' + ((day.getMonth()*1)+1) + '/' + day.getFullYear() + '] ' + ' (' + author + ')';
     }
 
     var post = new Post();
@@ -209,4 +247,15 @@ function createPost() {
     location.assign('#posts');
 
     return false;
+}
+
+function getPostsByUser() {
+    var query = new Parse.Query('Post');
+    query.equalTo('user', Parse.User.current())
+        .find()
+        .then(function(posts) {
+        console.log(posts);
+    }, function(err) {
+        console.log(err);
+    })
 }
