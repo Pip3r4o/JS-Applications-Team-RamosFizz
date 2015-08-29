@@ -127,6 +127,7 @@ function renderCreatePostView() {
         $('#btnrst').click(function () {
             $('#createpostcntnr form').trigger("reset");
         });
+        setInitialDateToUI();
         $('#createpostcntnr').submit(createPost);
     });
 }
@@ -258,4 +259,22 @@ function getPostsByUser() {
     }, function(err) {
         console.log(err);
     })
+}
+
+function getCurrentDate(){
+    var date=new Date(),
+        currentDate=date.getDate(),
+        currentMonth=date.getMonth(),
+        currentYear=date.getYear()+1900;//this is how it works :O
+
+    return {
+        date:currentDate,
+        month:currentMonth,
+        year:currentYear
+    }
+}
+
+function setInitialDateToUI(){
+    $('#dd option:eq('+(getCurrentDate().date-1)+')').attr('selected',true);
+    $('#mm option:eq('+(getCurrentDate().month-1)+')').attr('selected',true);
 }
