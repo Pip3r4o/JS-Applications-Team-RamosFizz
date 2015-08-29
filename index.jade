@@ -24,6 +24,31 @@ html
         div#mainWindow
             div#mainContent
 
+        script(type="text/handlebars-template").posttemplate
+            .container
+                h3.blog-main Sharing is caring - Share a trip!
+                .panel
+                    h2.panel-title Find other people to travel with!
+                    //{{#each posts}} DECOMMENT!!!
+                    .panel-body
+                        p.hidden.postid {{this.id}}
+                        p.panel-title {{this.attributes.title}}
+                        p.text-muted Author: {{this.attributes.author}}
+                        p.text-muted Mobile: {{this.attributes.contact}}
+                        .row
+                            .col-md-2
+                                p.text-muted From: {{this.attributes.from}}
+                            .col-md-2
+                                p.text-muted To: {{this.attributes.to}}
+                            .col-md-4
+                                p.text-muted When: {{this.attributes.when}}
+                            .col-md-2
+                                p.text-muted Seats: {{this.attributes.seats}}
+                            .col-md-2
+                                p.text-muted Price: {{this.attributes.price}}
+                        button.btn.btn-primary.btn-sm.pull-right Get a seat!
+                    //{{/each}} DECOMMENT!!!
+
         div#footer
             footer.footer
                 .container

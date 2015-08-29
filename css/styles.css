@@ -238,9 +238,17 @@ h6, .h6 {
     border: 1px solid #aaf;
 }
 
+.panel-body button {
+    margin-top: 10px;
+}
+
 .panel {
     padding: 10px;
     border: 2px solid #aaf;
+}
+
+.panel-title {
+    margin-bottom: 15px;
 }
 
 #createpostcntnr {

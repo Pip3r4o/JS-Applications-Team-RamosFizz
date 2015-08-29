@@ -46,7 +46,7 @@ var sgnOutBtn = $('#btnsgnout').click(function () {
             toastr.error('There was an error while logging out! :(')
         });
 });
-var userBtn = $('#user');
+var userBtn   = $('#user');
 
 var headers  = {
     "X-Parse-Application-Id": "oXLbvSKFI0HQJAT5QCpStZbr0Lx5Upt4j6MJFh92",
@@ -54,12 +54,14 @@ var headers  = {
     "X-Parse-Session-Token": "r:ibKBnfwBNGfkNBSNbkN7kyaFm"
 };
 var queryURL = "https://api.parse.com/1/classes/";
-var data;
-
 if (!Parse.User.current()) {
     renderLoginView();
 } else {
-    renderPostsView();
+    if (location.hash !== '#posts') {
+        location.assign('#posts');
+    } else {
+        renderPostsView();
+    }
 }
 
 function renderRegisterView() {
@@ -108,18 +110,93 @@ function renderPostsView() {
     userBtn.show();
     sgnOutBtn.show();
 
-    $('#mainContent').load('partials/posts.html');
-
+    // TODO: render posts template from #posttemplate
 
     var query = new Parse.Query('Post');
-    var data;
     query.ascending('day');
     query.greaterThan('day', new Date());
-    query.find().then(function(res) {
-        console.log(res);
-    }, function(err) {
+    query.greaterThan('seats', 0);
+    query.find().then(function (res) {
+        data = res;
+        generatePostsFromTemplate(data);
+    }, function (err) {
         console.log(err);
-    })
+    });
+}
+
+function generatePostsFromTemplate(data) {
+    var container = $('<div />').addClass('container');
+    var panel = $('<div />').addClass('panel');
+
+    // TODO: add functionality to store posts a user reserves a spot for
+
+    panel.append($('<h2 />').addClass('panel-title').html('Find other people to travel with!'));
+
+    for (var i = 0, len = data.length; i < len; i += 1) {
+        var panelBody = $('<div />').addClass('panel-body');
+        var row = $('<div />').addClass('.row');
+        panelBody.append($('<p />').addClass('hidden').addClass('postid').html(data[i].id));
+        panelBody.append($('<p />').addClass('panel-title').html(data[i].attributes.title));
+        panelBody.append($('<p />').addClass('text-muted').html('Author: ' + data[i].attributes.author));
+        panelBody.append($('<p />').addClass('text-muted').html('Mobile: ' + data[i].attributes.contact));
+
+        row.append(
+            $('<div />').addClass('col-md-2').append($('<p />').addClass('text-muted').html('From: ' + data[i].attributes.from))
+        );
+        row.append(
+            $('<div />').addClass('col-md-2').append($('<p />').addClass('text-muted').html('From: ' + data[i].attributes.to))
+        );
+        row.append(
+            $('<div />').addClass('col-md-4').append($('<p />').addClass('text-muted').html('When: ' + data[i].attributes.day))
+        );
+        row.append(
+            $('<div />').addClass('col-md-2').append($('<p />').addClass('text-muted').html('Seats: ' + data[i].attributes.seats))
+        );
+        row.append(
+            $('<div />').addClass('col-md-2').append($('<p />').addClass('text-muted').html('Price: ' + data[i].attributes.price))
+        );
+
+        panelBody.append(row);
+
+        panelBody.append(
+            $('<button />').addClass('btn').addClass('btn-primary').addClass('btn-sm').addClass('pull-right').html('Get a seat!').click(function(ev) {
+                var tar = ev.target;
+
+                var postID = tar.parentNode.firstChild.innerHTML;
+                var seatsAvailable;
+                var post;
+                var query = new Parse.Query('Post');
+
+                query.get(postID).then(function(post) {
+                    if (post.get('user').id === Parse.User.current().id) {
+                        toastr.error('You cannot reserve a seat for yourself on your own post!');
+                        return;
+                    }
+
+                    seatsAvailable = post.get('seats');
+                    seatsAvailable -= 1;
+                    post.set('seats', seatsAvailable);
+                    post.save().then(function() {
+                        toastr.info('You reserved a seat on trip: ' + post.get('title'));
+                        location.assign('#user');
+                    });
+                }, function(err) {
+                    toastr.error('An error occured while fetching the post. Please try again later!');
+                    console.log(err);
+                });
+            })
+        );
+
+        panel.append(panelBody);
+    }
+
+    container.append(
+        $('<h3 />').html('Sharing is caring - Share a trip!').addClass('blog-main')
+    ).append(
+        panel
+    );
+
+    $('#mainContent').html(container);
 }
 
 function renderCreatePostView() {
@@ -134,7 +211,7 @@ function renderCreatePostView() {
 
 function renderUserView() {
     $('#mainContent').load('partials/user.html');
-    getPostsByUser();
+    // getPostsByUser();
 }
 
 function signInUser() {
@@ -212,11 +289,11 @@ function createPost() {
         from    = $('#fromslct option:selected').text(),
         to      = $('#toslct option:selected').text(),
         day     = new Date($('#yy option:selected').text(),
-                    ($('#mm option:selected').text()*1) - 1,
-                    $('#dd option:selected').text(),
-                    $('#hourslct option:selected').text(),
-                    $('#minuteslct option:selected').text(), 0),
-        seats   = $('#seatsslct option:selected').text(),
+            ($('#mm option:selected').text() * 1) - 1,
+            $('#dd option:selected').text(),
+            $('#hourslct option:selected').text(),
+            $('#minuteslct option:selected').text(), 0),
+        seats   = ($('#seatsslct option:selected').text()*1),
         price   = $('#priceslct option:selected').text(),
         created = new Date();
 
@@ -239,7 +316,7 @@ function createPost() {
 
     if (title.length < 10 || title.length > 30) {
         toastr.info('Title is too short or too long, converted to default format!');
-        title = from + ' - ' + to + ' [' + day.getDate() + '/' + ((day.getMonth()*1)+1) + '/' + day.getFullYear() + '] ' + ' (' + author + ')';
+        title = from + ' - ' + to + ' [' + day.getDate() + '/' + ((day.getMonth() * 1) + 1) + '/' + day.getFullYear() + '] ' + ' (' + author + ')';
     }
 
     var post = new Post();
@@ -250,31 +327,44 @@ function createPost() {
     return false;
 }
 
-function getPostsByUser() {
+function getUpcomingPostsByUser() {
     var query = new Parse.Query('Post');
     query.equalTo('user', Parse.User.current())
+        .greaterThanOrEqualTo('day', new Date())
         .find()
-        .then(function(posts) {
-        console.log(posts);
-    }, function(err) {
-        console.log(err);
-    })
+        .then(function (posts) {
+            console.log(posts);
+        }, function (err) {
+            console.log(err);
+        })
 }
 
-function getCurrentDate(){
-    var date=new Date(),
-        currentDate=date.getDate(),
-        currentMonth=date.getMonth(),
-        currentYear=date.getYear()+1900;//this is how it works :O
+function getPastPostsByUser() {
+    var query = new Parse.Query('Post');
+    query.equalTo('user', Parse.User.current())
+        .lessThan('day', new Date())
+        .find()
+        .then(function (posts) {
+            console.log(posts);
+        }, function (err) {
+            console.log(err);
+        })
+}
+
+function getCurrentDate() {
+    var date         = new Date(),
+        currentDate  = date.getDate(),
+        currentMonth = date.getMonth(),
+        currentYear  = date.getFullYear();
 
     return {
-        date:currentDate,
-        month:currentMonth,
-        year:currentYear
+        date: currentDate,
+        month: currentMonth,
+        year: currentYear
     }
 }
 
-function setInitialDateToUI(){
-    $('#dd option:eq('+(getCurrentDate().date-1)+')').attr('selected',true);
-    $('#mm option:eq('+(getCurrentDate().month-1)+')').attr('selected',true);
+function setInitialDateToUI() {
+    $('#dd option:eq(' + (getCurrentDate().date - 1) + ')').attr('selected', true);
+    $('#mm option:eq(' + (getCurrentDate().month - 1) + ')').attr('selected', true);
 }
