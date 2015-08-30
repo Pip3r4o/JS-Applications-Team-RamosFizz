@@ -55,6 +55,27 @@ html
                         button.btn.btn-primary.btn-sm.pull-right.btn-reserve-seat Get a seat!
                     | {{/each}}
 
+        script(type="text/handlebars-template")#user-post-template
+            .container
+                .panel
+                    h2.panel-title {{type}}
+                    | {{#each posts}}
+                    .panel-body
+                        p.hidden.postid {{this.id}}
+                        p.panel-title {{this.attributes.title}}
+                        .row
+                            .col-md-2
+                                p.text-muted From: {{this.attributes.from}}
+                            .col-md-2
+                                p.text-muted To: {{this.attributes.to}}
+                            .col-md-4
+                                p.text-muted When: {{this.attributes.day}}
+                            .col-md-2
+                                p.text-muted Seats: {{this.attributes.seats}}
+                            .col-md-2
+                                p.text-muted Price: {{this.attributes.price}}
+                    | {{/each}}
+
         div#footer
             footer.footer
                 .container

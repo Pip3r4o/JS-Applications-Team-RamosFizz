@@ -121,16 +121,16 @@ function renderPostsView() {
     query.greaterThan('seats', 0);
     query.find().then(function (res) {
         data = res;
-        generatePostsFromTemplate(data);
+        generatePostsFromTemplate(data, '#post-template');
     }, function (err) {
         console.log(err);
     });
 }
 
-function generatePostsFromTemplate(data) {
+function generatePostsFromTemplate(data, tamplateSelector) {
     data = {posts: data};
 
-    var templateSource   = $('#post-template').html();
+    var templateSource = $(tamplateSelector).html();
     var template = Handlebars.compile(templateSource);
 
     $('#mainContent').html(template(data));
@@ -141,7 +141,7 @@ function generatePostsFromTemplate(data) {
         var postID = tar.parentNode.firstChild.innerHTML;
         var seatsAvailable;
         var post;
-        var query  = new Parse.Query('Post');
+        var query = new Parse.Query('Post');
 
         query.get(postID).then(function (post) {
             if (post.get('user').id === Parse.User.current().id) {
@@ -176,8 +176,23 @@ function renderCreatePostView() {
 }
 
 function renderUserView() {
-    $('#mainContent').load('partials/user.html');
+    $('#mainContent').html('');
+    getUpcomingPostsByUser();
+    getPastPostsByUser();
     // getPostsByUser();
+}
+
+function generateUserPosts(posts, type){
+
+    var data = {
+        type: type,
+        posts: posts
+    };
+
+    var templateSource = $('#user-post-template').html();
+    var template = Handlebars.compile(templateSource);
+
+    $('#mainContent').append(template(data));
 }
 
 function signInUser() {
@@ -301,7 +316,7 @@ function getUpcomingPostsByUser() {
         .greaterThanOrEqualTo('day', new Date())
         .find()
         .then(function (posts) {
-            console.log(posts);
+            generateUserPosts(posts, 'Panding posts!')
         }, function (err) {
             console.log(err);
         })
@@ -313,7 +328,7 @@ function getPastPostsByUser() {
         .lessThan('day', new Date())
         .find()
         .then(function (posts) {
-            console.log(posts);
+            generateUserPosts(posts, 'Past trips!')
         }, function (err) {
             console.log(err);
         })
