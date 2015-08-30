@@ -9,17 +9,23 @@ html
         script(type="text/javascript" src="bower_components/bootstrap/dist/js/bootstrap.js")
         script(type="text/javascript" src="bower_components/parse-1.5.0/index.js")
         script(type="text/javascript" src="node_modules/toastr/toastr.js")
-        script(type="text/javascript" src="node_modules/handlebars/lib/handlebars.js")
+        script(type="text/javascript" src="node_modules/handlebars/dist/handlebars.js")
+        script(type="text/javascript" src="bower_components/system.js/dist/system.js")
+        script(type="text/javascript" src="scripts/Systemjs-configuration.js")
         
     body
 
         div#header
             div.blog-masthead
                 div.container
-                    nav.blog-nav
-                        a(href="#posts").blog-nav-item.active Posts
-                        a(href="#makepost").blog-nav-item Create Post
-                        a(href="#user").blog-nav-item#user Your Posts
+                     nav.blog-nav
+                        div.row
+                            div.col-md-10
+                                a(href="#posts").blog-nav-item.active Posts
+                                a(href="#makepost").blog-nav-item Create Post
+                                a(href="#user").blog-nav-item#user Your Posts
+                            div.col-md-2
+                                a(href="#userProfile").blog-nav-item#userProfile
 
         div#mainWindow
             div#mainContent
@@ -56,4 +62,10 @@ html
                     p.text-info.text-center Powered by Bootstrap
                     a(href="#").btn-success#btnsgnout Log Out
 
-        script(type="text/javascript" src="scripts/scripts.js")
+        //script(type="text/javascript" src="scripts/scripts.js")
+        script(type="text/handlebars-template")#userProfileTemplate
+            p {{this}}
+        script(type="text/javascript" src='scripts/handlebarsUserCompiler.js')
+
+
+

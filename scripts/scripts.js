@@ -1,3 +1,5 @@
+//import 'scripts/handlebarsUserCompiler.js';
+
 Parse.initialize("oXLbvSKFI0HQJAT5QCpStZbr0Lx5Upt4j6MJFh92", "KAtLgD0vTTYionS73fIxYY1XYWGedKaUgXvzFd26");
 
 function locationHashChanged() {
@@ -41,14 +43,15 @@ var sgnOutBtn = $('#btnsgnout').click(function () {
         function () {
             toastr.success('You successfully logged out!');
             renderLoginView();
+            copmpileTemplate(getUsername());
         },
         function () {
             toastr.error('There was an error while logging out! :(')
         });
 });
-var userBtn   = $('#user');
+var userBtn = $('#user');
 
-var headers  = {
+var headers = {
     "X-Parse-Application-Id": "oXLbvSKFI0HQJAT5QCpStZbr0Lx5Upt4j6MJFh92",
     "X-Parse-REST-API-Key": "cgUc5R9lH0nea12lwiPtyBURvi6qhfREGPkAww6x",
     "X-Parse-Session-Token": "r:ibKBnfwBNGfkNBSNbkN7kyaFm"
@@ -118,7 +121,6 @@ function renderPostsView() {
     query.greaterThan('seats', 0);
     query.find().then(function (res) {
         data = res;
-        generatePostsFromTemplate(data);
     }, function (err) {
         console.log(err);
     });
@@ -159,7 +161,7 @@ function generatePostsFromTemplate(data) {
         panelBody.append(row);
 
         panelBody.append(
-            $('<button />').addClass('btn').addClass('btn-primary').addClass('btn-sm').addClass('pull-right').html('Get a seat!').click(function(ev) {
+            $('<button />').addClass('btn').addClass('btn-primary').addClass('btn-sm').addClass('pull-right').html('Get a seat!').click(function (ev) {
                 var tar = ev.target;
 
                 var postID = tar.parentNode.firstChild.innerHTML;
@@ -167,7 +169,7 @@ function generatePostsFromTemplate(data) {
                 var post;
                 var query = new Parse.Query('Post');
 
-                query.get(postID).then(function(post) {
+                query.get(postID).then(function (post) {
                     if (post.get('user').id === Parse.User.current().id) {
                         toastr.error('You cannot reserve a seat for yourself on your own post!');
                         return;
@@ -176,11 +178,11 @@ function generatePostsFromTemplate(data) {
                     seatsAvailable = post.get('seats');
                     seatsAvailable -= 1;
                     post.set('seats', seatsAvailable);
-                    post.save().then(function() {
+                    post.save().then(function () {
                         toastr.info('You reserved a seat on trip: ' + post.get('title'));
                         location.assign('#user');
                     });
-                }, function(err) {
+                }, function (err) {
                     toastr.error('An error occured while fetching the post. Please try again later!');
                     console.log(err);
                 });
@@ -223,8 +225,9 @@ function signInUser() {
             .then(function () {
                 toastr.success('Successfully logged in!');
                 renderPostsView();
-            },
-            function (err) {
+                copmpileTemplate(getUsername());
+            }, function (err) {
+                console.log(err);
                 toastr.error('Error ' + err.code + ': ' + err.message);
             });
     } else {
@@ -237,12 +240,12 @@ function signInUser() {
 
 function signUpUser() {
     var emailRegEx = /\b[A-Z0-9._%+-]+@(?:[A-Z0-9-]+\.)+[A-Z]{2,4}\b/ig;
-    var username   = $('#registerUsername').val(),
-        fName      = $('#registerFName').val(),
-        lName      = $('#registerLName').val(),
-        email      = $('#registerEmail').val(),
-        password   = $('#registerPassword').val();
-    var deferred   = new Promise(function (resolve, reject) {
+    var username = $('#registerUsername').val(),
+        fName = $('#registerFName').val(),
+        lName = $('#registerLName').val(),
+        email = $('#registerEmail').val(),
+        password = $('#registerPassword').val();
+    var deferred = new Promise(function (resolve, reject) {
         if (!(emailRegEx.exec(email))) {
             reject('Invalid Email!');
             return;
@@ -283,18 +286,18 @@ function signUpUser() {
 }
 
 function createPost() {
-    var author  = Parse.User.current().get('username'),
-        title   = $('#titleinpt').val(),
+    var author = Parse.User.current().get('username'),
+        title = $('#titleinpt').val(),
         contact = $('#contactinpt').val(),
-        from    = $('#fromslct option:selected').text(),
-        to      = $('#toslct option:selected').text(),
-        day     = new Date($('#yy option:selected').text(),
+        from = $('#fromslct option:selected').text(),
+        to = $('#toslct option:selected').text(),
+        day = new Date($('#yy option:selected').text(),
             ($('#mm option:selected').text() * 1) - 1,
             $('#dd option:selected').text(),
             $('#hourslct option:selected').text(),
             $('#minuteslct option:selected').text(), 0),
-        seats   = ($('#seatsslct option:selected').text()*1),
-        price   = $('#priceslct option:selected').text(),
+        seats = ($('#seatsslct option:selected').text() * 1),
+        price = $('#priceslct option:selected').text(),
         created = new Date();
 
     var numberRegEx = /^(\+359|0)\s?8(\d{2}\s\d{6}|[789]\d{7})$/igm;
@@ -352,10 +355,10 @@ function getPastPostsByUser() {
 }
 
 function getCurrentDate() {
-    var date         = new Date(),
-        currentDate  = date.getDate(),
+    var date = new Date(),
+        currentDate = date.getDate(),
         currentMonth = date.getMonth(),
-        currentYear  = date.getFullYear();
+        currentYear = date.getFullYear();
 
     return {
         date: currentDate,
@@ -367,4 +370,17 @@ function getCurrentDate() {
 function setInitialDateToUI() {
     $('#dd option:eq(' + (getCurrentDate().date - 1) + ')').attr('selected', true);
     $('#mm option:eq(' + (getCurrentDate().month - 1) + ')').attr('selected', true);
+}
+
+function getUsername() {
+    var data;
+
+    if (Parse.User.current()) {
+        data = Parse.User.current().getUsername();
+    }
+    else {
+        data = 'Sign in!';
+    }
+
+    return data;
 }
