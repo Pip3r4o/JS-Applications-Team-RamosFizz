@@ -124,10 +124,19 @@ function renderPostsView() {
     }, function (err) {
         console.log(err);
     });
+
+    generatePostsFromTemplate(data);
 }
 
 function generatePostsFromTemplate(data) {
-    var container = $('<div />').addClass('container');
+    data = {posts: data};
+
+    var templateSource   = $('#post-template').html();
+    var template = Handlebars.compile(templateSource);
+
+    $('#mainContent').html(template(data));
+
+    /*var container = $('<div />').addClass('container');
     var panel = $('<div />').addClass('panel');
 
     // TODO: add functionality to store posts a user reserves a spot for
@@ -198,7 +207,7 @@ function generatePostsFromTemplate(data) {
         panel
     );
 
-    $('#mainContent').html(container);
+    $('#mainContent').html(container);*/
 }
 
 function renderCreatePostView() {

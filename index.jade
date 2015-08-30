@@ -10,8 +10,8 @@ html
         script(type="text/javascript" src="bower_components/parse-1.5.0/index.js")
         script(type="text/javascript" src="node_modules/toastr/toastr.js")
         script(type="text/javascript" src="node_modules/handlebars/dist/handlebars.js")
-        script(type="text/javascript" src="bower_components/system.js/dist/system.js")
-        script(type="text/javascript" src="scripts/Systemjs-configuration.js")
+        //script(type="text/javascript" src="bower_components/system.js/dist/system.js")
+        //script(type="text/javascript" src="scripts/Systemjs-configuration.js")
         
     body
 
@@ -30,12 +30,12 @@ html
         div#mainWindow
             div#mainContent
 
-        script(type="text/handlebars-template").posttemplate
+        script(type="text/handlebars-template")#post-template
             .container
                 h3.blog-main Sharing is caring - Share a trip!
                 .panel
                     h2.panel-title Find other people to travel with!
-                    //{{#each posts}} DECOMMENT!!!
+                    | {{#each posts}}
                     .panel-body
                         p.hidden.postid {{this.id}}
                         p.panel-title {{this.attributes.title}}
@@ -53,7 +53,7 @@ html
                             .col-md-2
                                 p.text-muted Price: {{this.attributes.price}}
                         button.btn.btn-primary.btn-sm.pull-right Get a seat!
-                    //{{/each}} DECOMMENT!!!
+                    | {{/each}}
 
         div#footer
             footer.footer
@@ -62,7 +62,7 @@ html
                     p.text-info.text-center Powered by Bootstrap
                     a(href="#").btn-success#btnsgnout Log Out
 
-        //script(type="text/javascript" src="scripts/scripts.js")
+        script(type="text/javascript" src="scripts/scripts.js")
         script(type="text/handlebars-template")#userProfileTemplate
             p {{this}}
         script(type="text/javascript" src='scripts/handlebarsUserCompiler.js')
