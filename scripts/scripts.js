@@ -113,6 +113,12 @@ function renderPostsView() {
     userBtn.show();
     sgnOutBtn.show();
 
+    var $els = $('.blog-nav-item');
+    $("#header .blog-nav-item").on("click", function (e) {
+        var $target = $($(this)).addClass('active');
+        $els.not($target).removeClass('active');
+    });
+
     // TODO: render posts template from #posttemplate
     var data;
     var query = new Parse.Query('Post');
