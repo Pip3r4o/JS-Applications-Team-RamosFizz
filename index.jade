@@ -47,12 +47,12 @@ html
                             .col-md-2
                                 p.text-muted To: {{this.attributes.to}}
                             .col-md-4
-                                p.text-muted When: {{this.attributes.when}}
+                                p.text-muted When: {{this.attributes.day}}
                             .col-md-2
                                 p.text-muted Seats: {{this.attributes.seats}}
                             .col-md-2
                                 p.text-muted Price: {{this.attributes.price}}
-                        button.btn.btn-primary.btn-sm.pull-right Get a seat!
+                        button.btn.btn-primary.btn-sm.pull-right.btn-reserve-seat Get a seat!
                     | {{/each}}
 
         div#footer
@@ -65,7 +65,7 @@ html
         script(type="text/javascript" src="scripts/scripts.js")
         script(type="text/handlebars-template")#userProfileTemplate
             p {{this}}
-        script(type="text/javascript" src='scripts/handlebarsUserCompiler.js')
+        //script(type="text/javascript" src='scripts/handlebarsUserCompiler.js')
 
 
 

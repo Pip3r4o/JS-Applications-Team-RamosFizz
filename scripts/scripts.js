@@ -43,7 +43,7 @@ var sgnOutBtn = $('#btnsgnout').click(function () {
         function () {
             toastr.success('You successfully logged out!');
             renderLoginView();
-            copmpileTemplate(getUsername());
+            //copmpileTemplate(getUsername());
         },
         function () {
             toastr.error('There was an error while logging out! :(')
@@ -114,18 +114,17 @@ function renderPostsView() {
     sgnOutBtn.show();
 
     // TODO: render posts template from #posttemplate
-
+    var data;
     var query = new Parse.Query('Post');
     query.ascending('day');
     query.greaterThan('day', new Date());
     query.greaterThan('seats', 0);
     query.find().then(function (res) {
         data = res;
+        generatePostsFromTemplate(data);
     }, function (err) {
         console.log(err);
     });
-
-    generatePostsFromTemplate(data);
 }
 
 function generatePostsFromTemplate(data) {
@@ -136,78 +135,34 @@ function generatePostsFromTemplate(data) {
 
     $('#mainContent').html(template(data));
 
-    /*var container = $('<div />').addClass('container');
-    var panel = $('<div />').addClass('panel');
+    $('.btn-reserve-seat').click(function (ev) {
+        var tar = ev.target;
 
+        var postID = tar.parentNode.firstChild.innerHTML;
+        var seatsAvailable;
+        var post;
+        var query  = new Parse.Query('Post');
+
+        query.get(postID).then(function (post) {
+            if (post.get('user').id === Parse.User.current().id) {
+                toastr.error('You cannot reserve a seat for yourself on your own post!');
+                return;
+            }
+
+            seatsAvailable = post.get('seats');
+            seatsAvailable -= 1;
+            post.set('seats', seatsAvailable);
+            post.save().then(function () {
+                toastr.info('You reserved a seat on trip: ' + post.get('title'));
+                location.assign('#user');
+            });
+        }, function (err) {
+            toastr.error('An error occured while fetching the post. Please try again later!');
+            console.log(err);
+        });
+    });
     // TODO: add functionality to store posts a user reserves a spot for
 
-    panel.append($('<h2 />').addClass('panel-title').html('Find other people to travel with!'));
-
-    for (var i = 0, len = data.length; i < len; i += 1) {
-        var panelBody = $('<div />').addClass('panel-body');
-        var row = $('<div />').addClass('.row');
-        panelBody.append($('<p />').addClass('hidden').addClass('postid').html(data[i].id));
-        panelBody.append($('<p />').addClass('panel-title').html(data[i].attributes.title));
-        panelBody.append($('<p />').addClass('text-muted').html('Author: ' + data[i].attributes.author));
-        panelBody.append($('<p />').addClass('text-muted').html('Mobile: ' + data[i].attributes.contact));
-
-        row.append(
-            $('<div />').addClass('col-md-2').append($('<p />').addClass('text-muted').html('From: ' + data[i].attributes.from))
-        );
-        row.append(
-            $('<div />').addClass('col-md-2').append($('<p />').addClass('text-muted').html('From: ' + data[i].attributes.to))
-        );
-        row.append(
-            $('<div />').addClass('col-md-4').append($('<p />').addClass('text-muted').html('When: ' + data[i].attributes.day))
-        );
-        row.append(
-            $('<div />').addClass('col-md-2').append($('<p />').addClass('text-muted').html('Seats: ' + data[i].attributes.seats))
-        );
-        row.append(
-            $('<div />').addClass('col-md-2').append($('<p />').addClass('text-muted').html('Price: ' + data[i].attributes.price))
-        );
-
-        panelBody.append(row);
-
-        panelBody.append(
-            $('<button />').addClass('btn').addClass('btn-primary').addClass('btn-sm').addClass('pull-right').html('Get a seat!').click(function (ev) {
-                var tar = ev.target;
-
-                var postID = tar.parentNode.firstChild.innerHTML;
-                var seatsAvailable;
-                var post;
-                var query = new Parse.Query('Post');
-
-                query.get(postID).then(function (post) {
-                    if (post.get('user').id === Parse.User.current().id) {
-                        toastr.error('You cannot reserve a seat for yourself on your own post!');
-                        return;
-                    }
-
-                    seatsAvailable = post.get('seats');
-                    seatsAvailable -= 1;
-                    post.set('seats', seatsAvailable);
-                    post.save().then(function () {
-                        toastr.info('You reserved a seat on trip: ' + post.get('title'));
-                        location.assign('#user');
-                    });
-                }, function (err) {
-                    toastr.error('An error occured while fetching the post. Please try again later!');
-                    console.log(err);
-                });
-            })
-        );
-
-        panel.append(panelBody);
-    }
-
-    container.append(
-        $('<h3 />').html('Sharing is caring - Share a trip!').addClass('blog-main')
-    ).append(
-        panel
-    );
-
-    $('#mainContent').html(container);*/
 }
 
 function renderCreatePostView() {
@@ -233,8 +188,9 @@ function signInUser() {
         Parse.User.logIn(username, password)
             .then(function () {
                 toastr.success('Successfully logged in!');
-                renderPostsView();
-                copmpileTemplate(getUsername());
+                //renderPostsView();
+                location.assign('#posts');
+                //copmpileTemplate(getUsername());
             }, function (err) {
                 console.log(err);
                 toastr.error('Error ' + err.code + ': ' + err.message);
