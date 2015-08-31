@@ -35,6 +35,7 @@ function hideFilterButton(){
 
 function showFilterMenu(){
     $('#filterMenuContainer').removeClass('hidden')
+    hideFilterButton();
 }
 
 function hideFilterMenu(){
@@ -56,6 +57,7 @@ var showFilterMenuBtn=$('#filterBtn').click(function(){
 
 var cancelFilterBtn=$('#cancelFilterBtn').click(function(){
     hideFilterMenu();
+    showFilterButton();
 })
 
 
