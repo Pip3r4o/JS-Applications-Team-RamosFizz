@@ -87,7 +87,8 @@ var Post = Parse.Object.extend('Post', {
             'to': to,
             'day': day,
             'seats': seats,
-            'price': price
+            'price': price,
+            'otherTrips': []
         }, {
             success: function (post) {
                 toastr.info('You added a new post: ' + post.get('title'));
@@ -154,11 +155,20 @@ function generatePostsFromTemplate(data, tamplateSelector) {
                 toastr.error('You cannot reserve a seat for yourself on your own post!');
                 return;
             }
+            if (!Parse.User.current().get('otherTrips')) {
+                Parse.User.current().set('otherTrips', []);
+            }
+            if (Parse.User.current().get('otherTrips').indexOf(post.id) >= 0) {
+                toastr.error('You have already reserved a seat for this particular trip!');
+                return;
+            }
 
             seatsAvailable = post.get('seats');
             seatsAvailable -= 1;
             post.set('seats', seatsAvailable);
             post.save().then(function () {
+                Parse.User.current().attributes.otherTrips.push(post.id);
+                Parse.User.current().save();
                 toastr.info('You reserved a seat on trip: ' + post.get('title'));
                 location.assign('#user');
             });
@@ -183,13 +193,15 @@ function renderCreatePostView() {
 
 function renderUserView() {
     $('#mainContent').html('');
+
+    // TODO: Figure out how to run them in this specific order, synchronously
+
     getUpcomingPostsByUser();
     getPastPostsByUser();
-    // getPostsByUser();
+    getOtherPostsOfUser();
 }
 
 function generateUserPosts(posts, type){
-
     var data = {
         type: type,
         posts: posts
@@ -322,7 +334,7 @@ function getUpcomingPostsByUser() {
         .greaterThanOrEqualTo('day', new Date())
         .find()
         .then(function (posts) {
-            generateUserPosts(posts, 'Panding posts!')
+            generateUserPosts(posts, 'Panding posts!');
         }, function (err) {
             console.log(err);
         })
@@ -340,12 +352,37 @@ function getPastPostsByUser() {
         })
 }
 
+function getOtherPostsOfUser() {
+    var postIDs = Parse.User.current().get('otherTrips');
+
+    if (!postIDs) {
+        return;
+    }
+
+    var count = postIDs.length;
+    var posts = [];
+    var i;
+    for (i = 0; i < count; i += 1) {
+        var query = new Parse.Query('Post');
+
+        if (i === (count-1)) {
+            query.get(postIDs[i]).then(function(post) {
+                posts.push(post);
+                generateUserPosts(posts, 'Your trips with others!');
+            });
+        } else {
+            query.get(postIDs[i]).then(function(post) {
+                posts.push(post);
+            });
+        }
+    }
+}
+
 function getCurrentDate() {
     var date = new Date(),
         currentDate = date.getDate(),
         currentMonth = date.getMonth(),
         currentYear = date.getFullYear();
-
     return {
         date: currentDate,
         month: currentMonth,
