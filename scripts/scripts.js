@@ -3,6 +3,9 @@
 Parse.initialize("oXLbvSKFI0HQJAT5QCpStZbr0Lx5Upt4j6MJFh92", "KAtLgD0vTTYionS73fIxYY1XYWGedKaUgXvzFd26");
 
 function locationHashChanged() {
+
+    $('.blog-nav-item').removeClass('active');
+
     if (!Parse.User.current()) {
         location.assign('#');
         return;
@@ -114,13 +117,8 @@ function renderPostsView() {
     userBtn.show();
     sgnOutBtn.show();
 
-    var $els = $('.blog-nav-item');
-    $("#header .blog-nav-item").on("click", function (e) {
-        var $target = $($(this)).addClass('active');
-        $els.not($target).removeClass('active');
-    });
+    $('#posts').addClass('active');
 
-    // TODO: render posts template from #posttemplate
     var data;
     var query = new Parse.Query('Post');
     query.ascending('day');
@@ -182,6 +180,8 @@ function generatePostsFromTemplate(data, tamplateSelector) {
 }
 
 function renderCreatePostView() {
+    $('#makepost').addClass('active');
+
     $('#mainContent').load('partials/createPost.html', function () {
         $('#btnrst').click(function () {
             $('#createpostcntnr form').trigger("reset");
@@ -192,6 +192,8 @@ function renderCreatePostView() {
 }
 
 function renderUserView() {
+    $('#user').addClass('active');
+
     $('#mainContent').html('');
 
     // TODO: Figure out how to run them in this specific order, synchronously
