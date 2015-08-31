@@ -5,14 +5,14 @@ html
         link(rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css")
         link(rel="stylesheet" href="node_modules/toastr/build/toastr.css")
         link(rel="stylesheet" href="css/styles.css")
+        script(type="text/javascript" src="bower_components/system.js/dist/system.js")
+        script(type="text/javascript" src="scripts/Systemjs-configuration.js")
         script(type="text/javascript" src="bower_components/jquery/dist/jquery.js")
         script(type="text/javascript" src="bower_components/bootstrap/dist/js/bootstrap.js")
         script(type="text/javascript" src="bower_components/parse-1.5.0/index.js")
         script(type="text/javascript" src="node_modules/toastr/toastr.js")
         script(type="text/javascript" src="node_modules/handlebars/dist/handlebars.js")
-        //script(type="text/javascript" src="bower_components/system.js/dist/system.js")
-        //script(type="text/javascript" src="scripts/Systemjs-configuration.js")
-        
+
     body
 
         div#header
@@ -28,6 +28,40 @@ html
                                 a(href="#userProfile").blog-nav-item#userProfile
 
         div#mainWindow
+
+            #filter.container
+                    #filterBtnContainer.row.hidden
+                            button#filterBtn.btn-lg.btn-primary Filter by your choise!
+                    #filterMenuContainer.row.col-md-6.centered.hidden
+                        .row
+                            .col-sm-2
+                            .col-sm-4
+                                label(for="fromslct").text-info From:
+                                select.form-control#fromslct
+                                    option Sofia
+                                    option Burgas
+                                    option Varna
+                                    option Plovdiv
+                                    option Ruse
+                            .col-sm-4
+                                label(for="toslct").text-info To:
+                                select.form-control#toslct
+                                    option Sofia
+                                    option Burgas
+                                    option Varna
+                                    option Plovdiv
+                                    option Ruse
+                            .col-sm-2
+                        p
+                        .row
+                            .col-md-2
+                            .col-md-3
+                                button#searchFilterBtn.btn.btn-success Search
+                            .col-md-2
+                            .col-md-3
+                                button#cancelFilterBtn.btn.btn-danger Cancel
+                            .col-md-2
+
             div#mainContent
 
         script(type="text/handlebars-template")#post-template
@@ -82,16 +116,11 @@ html
                     | {{/each}}
 
         div#footer
-            footer.footer
+            footer.footer.clearfix
                 .container
                     p.text-muted.text-center This is the page's sticky footer - Pending an update - file layout.jade
                     p.text-info.text-center Powered by Bootstrap
                     a(href="#").btn-success#btnsgnout Log Out
-
-        script(type="text/javascript" src="scripts/scripts.js")
-        script(type="text/handlebars-template")#userProfileTemplate
-            p {{this}}
-        //script(type="text/javascript" src='scripts/handlebarsUserCompiler.js')
 
 
 

@@ -268,3 +268,27 @@ h6, .h6 {
 
 #createpostcntnr button {
 }
+
+.hidden{
+    display:none;
+}
+
+#filter{
+    text-align: center;
+}
+
+#filterBtnContainer{
+    margin:10px;
+}
+
+#filterMenuContainer{
+    border:solid 2px #0040D0;
+    border-radius:10px;
+    padding: 10px;
+    float: none;
+}
+
+.centered{
+    float: none;
+    margin: 0 auto;
+}
