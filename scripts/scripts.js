@@ -25,43 +25,46 @@ toastr.options = {
 //------------------------UI--------------------
 var userBtn = $('#user');
 
-function showFilterButton(){
+function showFilterButton() {
     $('#filterBtnContainer').removeClass('hidden')
 }
 
-function hideFilterButton(){
+function hideFilterButton() {
     $('#filterBtnContainer').addClass('hidden')
 }
 
-function showFilterMenu(){
+function showFilterMenu() {
     $('#filterMenuContainer').removeClass('hidden')
     hideFilterButton();
 }
 
-function hideFilterMenu(){
+function hideFilterMenu() {
     $('#filterMenuContainer').addClass('hidden')
 }
 
-function showFilterContainer(){
+function showFilterContainer() {
     $('#filter').removeClass('hidden')
     showFilterButton();
 }
 
-function hideFilterContainer(){
+function hideFilterContainer() {
     $('#filter').addClass('hidden');
     hideFilterButton();
     hideFilterMenu();
 }
 
-var showFilterMenuBtn=$('#filterBtn').click(function(){
+var showFilterMenuBtn = $('#filterBtn').click(function () {
     showFilterMenu();
 })
 
-var cancelFilterBtn=$('#cancelFilterBtn').click(function(){
+var cancelFilterBtn = $('#cancelFilterBtn').click(function () {
     hideFilterMenu();
     showFilterButton();
 })
 
+var searchFilterBtn = $('#searchFilterBtn').click(function () {
+    renderFilteredPostsView();
+})
 
 var sgnOutBtn = $('#btnsgnout').click(function () {
     hideFilterContainer();
@@ -98,12 +101,23 @@ function renderLoginView() {
     sgnOutBtn.hide();
 }
 
-function renderFilteredPostsView(){
-    userBtn.show();
-    sgnOutBtn.show();
-    showFilterContainer();
+function renderFilteredPostsView() {
+    var fromSelect = $('#fromslct').val(),
+        toSelect = $('#toslct').val(),
+        query = new Parse.Query('Post'),
+        data;
+    
+    query.contains('from', fromSelect)
+    query.contains('to', toSelect)
+    query.find().then(function (res) {
+        data = res;
+        if (res.length === 0) {
+            toastr.info('There are no posts for this query!');
+            return;
+        }
 
-
+        generatePostsFromTemplate(data, '#post-template');
+    })
 }
 
 function renderPostsView() {
@@ -120,9 +134,9 @@ function renderPostsView() {
     query.find().then(function (res) {
         data = res;
         generatePostsFromTemplate(data, '#post-template');
-    },function(err){
+    }, function (err) {
         console.log(err);
-    }).then(function(){
+    }).then(function () {
         showFilterContainer();
     });
 }
@@ -304,7 +318,7 @@ function generatePostsFromTemplate(data, tamplateSelector) {
 
 }
 
-function generateUserPosts(posts, type){
+function generateUserPosts(posts, type) {
     var data = {
         type: type,
         posts: posts
@@ -398,13 +412,13 @@ function getOtherPostsOfUser() {
     for (i = 0; i < count; i += 1) {
         var query = new Parse.Query('Post');
 
-        if (i === (count-1)) {
-            query.get(postIDs[i]).then(function(post) {
+        if (i === (count - 1)) {
+            query.get(postIDs[i]).then(function (post) {
                 posts.push(post);
                 generateUserPosts(posts, 'Your trips with others!');
             });
         } else {
-            query.get(postIDs[i]).then(function(post) {
+            query.get(postIDs[i]).then(function (post) {
                 posts.push(post);
             });
         }
@@ -423,7 +437,6 @@ if (!Parse.User.current()) {
         renderPostsView();
     }
 }
-
 
 
 function locationHashChanged() {
@@ -462,7 +475,7 @@ function getUsername() {
     var data;
 
     if (Parse.User.current()) {
-        data = 'Welcome, '+Parse.User.current().getUsername();
+        data = 'Welcome, ' + Parse.User.current().getUsername();
     }
     else {
         data = '';
