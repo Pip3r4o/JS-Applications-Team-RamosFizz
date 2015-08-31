@@ -91,7 +91,8 @@ var Post = Parse.Object.extend('Post', {
             'day': day,
             'seats': seats,
             'price': price,
-            'otherTrips': []
+            'otherTrips': [],
+            'usersTraveling': []
         }, {
             success: function (post) {
                 toastr.info('You added a new post: ' + post.get('title'));
@@ -147,16 +148,20 @@ function generatePostsFromTemplate(data, tamplateSelector) {
         var seatsAvailable;
         var post;
         var query = new Parse.Query('Post');
+        var user = Parse.User.current();
 
         query.get(postID).then(function (post) {
-            if (post.get('user').id === Parse.User.current().id) {
+            if (post.get('user').id === user.id) {
                 toastr.error('You cannot reserve a seat for yourself on your own post!');
                 return;
             }
-            if (!Parse.User.current().get('otherTrips')) {
-                Parse.User.current().set('otherTrips', []);
+            if (!user.get('otherTrips')) {
+                user.set('otherTrips', []);
             }
-            if (Parse.User.current().get('otherTrips').indexOf(post.id) >= 0) {
+            if (!post.get('usersTraveling')) {
+                post.set('usersTraveling', []);
+            }
+            if (user.get('otherTrips').indexOf(post.id) >= 0) {
                 toastr.error('You have already reserved a seat for this particular trip!');
                 return;
             }
@@ -164,9 +169,10 @@ function generatePostsFromTemplate(data, tamplateSelector) {
             seatsAvailable = post.get('seats');
             seatsAvailable -= 1;
             post.set('seats', seatsAvailable);
+            post.attributes.usersTraveling.push(user.get('username'));
             post.save().then(function () {
-                Parse.User.current().attributes.otherTrips.push(post.id);
-                Parse.User.current().save();
+                user.attributes.otherTrips.push(post.id);
+                user.save();
                 toastr.info('You reserved a seat on trip: ' + post.get('title'));
                 location.assign('#user');
             });
@@ -394,7 +400,7 @@ function getCurrentDate() {
 
 function setInitialDateToUI() {
     $('#dd option:eq(' + (getCurrentDate().date - 1) + ')').attr('selected', true);
-    $('#mm option:eq(' + (getCurrentDate().month - 1) + ')').attr('selected', true);
+    $('#mm option:eq(' + (getCurrentDate().month) + ')').attr('selected', true);
 }
 
 function getUsername() {
