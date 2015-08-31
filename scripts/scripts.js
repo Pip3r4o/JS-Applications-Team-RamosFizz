@@ -48,7 +48,9 @@ function showFilterContainer(){
 }
 
 function hideFilterContainer(){
-    $('#filter').addClass('hidden')
+    $('#filter').addClass('hidden');
+    hideFilterButton();
+    hideFilterMenu();
 }
 
 var showFilterMenuBtn=$('#filterBtn').click(function(){
@@ -96,10 +98,17 @@ function renderLoginView() {
     sgnOutBtn.hide();
 }
 
-function renderPostsView() {
+function renderFilteredPostsView(){
     userBtn.show();
     sgnOutBtn.show();
     showFilterContainer();
+
+
+}
+
+function renderPostsView() {
+    userBtn.show();
+    sgnOutBtn.show();
 
     $('#posts').addClass('active');
 
@@ -111,11 +120,12 @@ function renderPostsView() {
     query.find().then(function (res) {
         data = res;
         generatePostsFromTemplate(data, '#post-template');
-    }, function (err) {
+    },function(err){
         console.log(err);
+    }).then(function(){
+        showFilterContainer();
     });
 }
-
 
 function renderCreatePostView() {
     hideFilterContainer();
