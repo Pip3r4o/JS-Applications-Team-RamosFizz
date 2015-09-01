@@ -282,8 +282,8 @@ h6, .h6 {
 }
 
 #filterMenuContainer{
-    border:solid 2px #0040D0;
-    border-radius:10px;
+    border:solid 2px #d5d5d5;
+    border-radius:5px;
     padding: 10px;
     float: none;
 }
@@ -291,4 +291,8 @@ h6, .h6 {
 .centered{
     float: none;
     margin: 0 auto;
+}
+
+.inline{
+    display:inline-block;
 }

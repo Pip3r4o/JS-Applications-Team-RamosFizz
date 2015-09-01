@@ -33,4 +33,4 @@ var validator = {
     }
 };
 
-export {validator}
+export {validator};

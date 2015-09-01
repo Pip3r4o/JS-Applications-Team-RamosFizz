@@ -1,6 +1,7 @@
 'use strict'
 
 import {validator} from './validator.js';
+import render from './render.js';
 
 function generatePostsFromTemplate(data, tamplateSelector) {
     data = {posts: data};
@@ -9,6 +10,10 @@ function generatePostsFromTemplate(data, tamplateSelector) {
     var template = Handlebars.compile(templateSource);
 
     $('#mainContent').html(template(data));
+
+    $('#showAllPostsBtn').click(function () {
+        render.postsView();
+    })
 
     $('.btn-reserve-seat').click(function (ev) {
         var tar = ev.target;

@@ -1,7 +1,7 @@
 'use strict'
 
-import controlers from './controllers.js';
-import userControlers from './userControllers.js';
+import controllers from './controllers.js';
+import userControllers from './userControllers.js';
 
 var userBtn = $('#user');
 
@@ -44,7 +44,10 @@ var cancelFilterBtn = $('#cancelFilterBtn').click(function () {
 
 var searchFilterBtn = $('#searchFilterBtn').click(function () {
     renderFilteredPostsView();
+    hideFilterMenu();
+    showFilterButton();
 })
+
 
 var sgnOutBtn = $('#btnsgnout').click(function () {
     hideFilterContainer();
@@ -65,7 +68,7 @@ function setInitialDateToUI() {
 
 function registerView() {
     $('#mainContent').load('partials/register.html', function () {
-        $('#signup').submit(userControlers.signUp);
+        $('#signup').submit(userControllers.signUp);
         $('#btnsgnin').click(loginView);
     });
     userBtn.hide();
@@ -75,7 +78,7 @@ function registerView() {
 
 function loginView() {
     $('#mainContent').load('partials/login.html', function () {
-        $('#signin').submit(userControlers.signIn);
+        $('#signin').submit(userControllers.signIn);
         $('#btnrgstr').click(registerView);
     });
     userBtn.hide();
@@ -94,7 +97,7 @@ function renderFilteredPostsView() {
     if(priceSelect!=='-'){
         query.contains('price',priceSelect);
     }
-    
+
     if(userInput!==''){
         query.equalTo('author',userInput);
     }
@@ -108,7 +111,7 @@ function renderFilteredPostsView() {
             return;
         }
 
-        controlers.generatePostsFromTemplate(data, '#post-template');
+        controllers.generatePostsFromTemplate(data, '#post-template');
     })
 }
 
@@ -128,7 +131,7 @@ function postsView() {
     query.greaterThan('seats', 0);
     query.find().then(function (res) {
         data = res;
-        controlers.generatePostsFromTemplate(data, '#post-template');
+        controllers.generatePostsFromTemplate(data, '#post-template');
     }, function (err) {
         console.log(err);
     }).then(function () {
@@ -168,7 +171,7 @@ function getUpcomingPostsByUser() {
         .greaterThanOrEqualTo('day', new Date())
         .find()
         .then(function (posts) {
-            controlers.generateUserPosts(posts, 'Panding posts!');
+            controllers.generateUserPosts(posts, 'Panding posts!');
         }, function (err) {
             console.log(err);
         })
@@ -180,7 +183,7 @@ function getPastPostsByUser() {
         .lessThan('day', new Date())
         .find()
         .then(function (posts) {
-            controlers.generateUserPosts(posts, 'Past trips!')
+            controllers.generateUserPosts(posts, 'Past trips!')
         }, function (err) {
             console.log(err);
         })
@@ -202,7 +205,7 @@ function getOtherPostsOfUser() {
         if (i === (count - 1)) {
             query.get(postIDs[i]).then(function (post) {
                 posts.push(post);
-                controlers.generateUserPosts(posts, 'Your trips with others!');
+                controllers.generateUserPosts(posts, 'Your trips with others!');
             });
         } else {
             query.get(postIDs[i]).then(function (post) {
@@ -237,4 +240,4 @@ function getUsername() {
     return data;
 }
 
-export default {loginView, postsView, createPostView, userView}
+export default {loginView, postsView, createPostView, userView};

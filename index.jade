@@ -35,7 +35,7 @@ html
 
             #filter.container
                     #filterBtnContainer.row.hidden
-                            button#filterBtn.btn-lg.btn-primary Filter by your choise!
+                            button#filterBtn.btn-lg.btn-primary Filter by your choise
                     #filterMenuContainer.row.col-md-6.centered.hidden
                         .row
                             .col-sm-2
@@ -97,8 +97,10 @@ html
             .container
                 h3.blog-main Sharing is caring - Share a trip!
                 .panel
-                    h2.panel-title Find other people to travel with!
+                    h2.panel-title.inline Find other people to travel with!
+                    button#showAllPostsBtn.btn-sm.btn-primary.pull-right Show all posts
                     | {{#each posts}}
+                    p
                     .panel-body
                         p.hidden.postid {{this.id}}
                         p.panel-title {{this.attributes.title}}
