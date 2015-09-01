@@ -8,4 +8,4 @@ System.config({
     }
 });
 
-System.import('scripts/scripts.js');
+System.import('scripts/index.js');

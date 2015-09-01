@@ -1,28 +1,18 @@
-'use strict'
+'use strict';
 
-import {validator} from './validator.js';
-import render from './render.js';
+import validator from './validator.js';
+import renderer from './renderer.js';
+import Post from './post.js';
 
-function generatePostsFromTemplate(data, tamplateSelector) {
-    data = {posts: data};
-
-    var templateSource = $(tamplateSelector).html();
-    var template = Handlebars.compile(templateSource);
-
-    $('#mainContent').html(template(data));
-
-    $('#showAllPostsBtn').click(function () {
-        render.postsView();
-    })
-
-    $('.btn-reserve-seat').click(function (ev) {
+var controllers = function() {
+    function reserveSeat(ev) {
         var tar = ev.target;
 
         var postID = tar.parentNode.firstChild.innerHTML;
         var seatsAvailable;
         var post;
-        var query = new Parse.Query('Post');
-        var user = Parse.User.current();
+        var query  = new Parse.Query('Post');
+        var user   = Parse.User.current();
 
         query.get(postID).then(function (post) {
             if (post.get('user').id === user.id) {
@@ -54,50 +44,82 @@ function generatePostsFromTemplate(data, tamplateSelector) {
             toastr.error('An error occured while fetching the post. Please try again later!');
             console.log(err);
         });
-    });
-    // TODO: add functionality to store posts a user reserves a spot for
-}
+    }
 
-function createPost() {
-    var author = Parse.User.current().get('username'),
-        title = $('#titleinpt').val(),
-        contact = $('#contactinpt').val(),
-        from = $('#fromslct option:selected').text(),
-        to = $('#toslct option:selected').text(),
-        day = new Date($('#yy option:selected').text(),
-            ($('#mm option:selected').text() * 1) - 1,
-            $('#dd option:selected').text(),
-            $('#hourslct option:selected').text(),
-            $('#minuteslct option:selected').text(), 0),
-        seats = ($('#seatsslct option:selected').text() * 1),
-        price = $('#priceslct option:selected').text();
+    function generatePostsFromTemplate(data, tamplateSelector) {
+        data = {posts: data};
 
-    validator.date(day);
+        var templateSource = $(tamplateSelector).html();
+        var template       = Handlebars.compile(templateSource);
 
-    validator.destination(from, to);
+        $('#mainContent').html(template(data));
 
-    validator.telephone(contact);
+        $('#showAllPostsBtn').click(function () {
+            renderer.postsView();
+        });
 
-    title = validator.title(title, day, author);
+        $('.btn-reserve-seat').click(reserveSeat);
+    }
 
-    var post = new Post();
-    post.create(author, title, contact, from, to, day, seats, price);
+    function generateUserPostsFromTemplate(posts, type) {
+        var data = {
+            type: type,
+            posts: posts
+        };
 
-    location.assign('#posts');
+        var templateSource = $('#user-post-template').html();
+        var template       = Handlebars.compile(templateSource);
 
-    return false;
-}
+        $('#mainContent').append(template(data));
+    }
 
-function generateUserPosts(posts, type) {
-    var data = {
-        type: type,
-        posts: posts
-    };
+    function createPost() {
+        var author  = Parse.User.current().get('username'),
+            title   = $('#titleinpt').val(),
+            contact = $('#contactinpt').val(),
+            from    = $('#fromslct option:selected').text(),
+            to      = $('#toslct option:selected').text(),
+            day     = new Date($('#yy option:selected').text(),
+                ($('#mm option:selected').text() * 1) - 1,
+                $('#dd option:selected').text(),
+                $('#hourslct option:selected').text(),
+                $('#minuteslct option:selected').text(), 0),
+            seats   = ($('#seatsslct option:selected').text() * 1),
+            price   = $('#priceslct option:selected').text();
 
-    var templateSource = $('#user-post-template').html();
-    var template = Handlebars.compile(templateSource);
+        if (!validator.mobileNumberValidation(contact)) {
+            toastr.error('Mobile number is not in a valid BG format!');
+            return false;
+        }
 
-    $('#mainContent').append(template(data));
-}
+        if (!validator.destinationValidation(from, to)) {
+            toastr.error('You must travel from/to a town different to the place of departure!');
+            return false;
+        }
 
-export default {generatePostsFromTemplate, createPost, generateUserPosts}
+        if (!validator.dateValidation(day)) {
+            toastr.error('You cannot create a post that is due previous date!');
+            return false;
+        }
+
+        if (!validator.titleValidation(title)) {
+            toastr.info('Title is too short or too long, converted to default format!');
+            title = from + ' - ' + to + ' [' + day.getDate() + '/' + ((day.getMonth() * 1) + 1) + '/' + day.getFullYear() + '] ' + ' (' + author + ')';
+        }
+
+        var post = new Post();
+        post.create(author, title, contact, from, to, day, seats, price);
+
+        location.assign('#posts');
+
+        return false;
+    }
+
+    return {
+        generatePostsFromTemplate: generatePostsFromTemplate,
+        generateUserPostsFromTemplate: generateUserPostsFromTemplate,
+        createPost: createPost
+    }
+}();
+
+export default controllers
