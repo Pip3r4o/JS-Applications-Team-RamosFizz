@@ -14,6 +14,8 @@ html
         script(type="text/javascript" src="node_modules/handlebars/dist/handlebars.js")
 
     body
+        div#fb-root
+        script (function(d, s, id) {var js, fjs = d.getElementsByTagName(s)[0];if (d.getElementById(id)) return;js = d.createElement(s); js.id = id;js.src = "//connect.facebook.net/bg_BG/sdk.js#xfbml=1&version=v2.4";fjs.parentNode.insertBefore(js, fjs);}(document, 'script', 'facebook-jssdk'))
 
         div#header
             div.blog-masthead
@@ -122,6 +124,6 @@ html
                 .container
                     p.text-muted.text-center This is the page's sticky footer - Pending an update - file layout.jade
                     p.text-info.text-center Powered by Bootstrap
-
+                    div.fb-like(data-href="http://telerikacademy.com/")(data-width="30")(data-layout="box_count")(data-action="like")(data-show-faces="true")(data-share="true")
 
 
