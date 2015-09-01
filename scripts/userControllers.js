@@ -13,6 +13,7 @@ var userControllers = (function () {
                 .then(function () {
                     toastr.success('Successfully logged in!');
                     location.assign('#posts');
+                    showUserControls();
                 }, function (err) {
                     console.log(err);
                     toastr.error('Error ' + err.code + ': ' + err.message);
@@ -23,6 +24,15 @@ var userControllers = (function () {
         }
 
         return false;
+    }
+
+    function hideUserControls() {
+        $('#user-nav').hide();
+    }
+
+    function showUserControls() {
+        $('#userProfile').html(Parse.User.current().get('username') + '\'s posts');
+        $('#user-nav').show();
     }
 
     function signUp() {
@@ -62,7 +72,8 @@ var userControllers = (function () {
         })
             .then(function () {
                 toastr.success('Successfully signed up!');
-                location.assign('#post')
+                location.assign('#post');
+                showUserControls();
             },
             function (err) {
                 console.log(err);
@@ -72,11 +83,11 @@ var userControllers = (function () {
         return false;
     }
 
-    // TODO: Implement for signOut button
     function signOut() {
         Parse.User.logOut().then(
             function () {
                 toastr.success('You successfully logged out!');
+                hideUserControls();
                 renderer.loginView();
             },
             function () {
@@ -87,7 +98,9 @@ var userControllers = (function () {
     return {
         signIn: signIn,
         signUp: signUp,
-        signOut: signOut
+        signOut: signOut,
+        hideUserControls: hideUserControls,
+        showUserControls: showUserControls
     }
 
 }());

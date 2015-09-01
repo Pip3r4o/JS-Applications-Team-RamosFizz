@@ -4,8 +4,6 @@ import controllers from './controllers.js';
 import userControllers from './userControllers.js';
 
 var renderer = (function () {
-    var userBtn = $('#user');
-
     function showFilterButton() {
         $('#filterBtnContainer').removeClass('hidden');
     }
@@ -49,18 +47,10 @@ var renderer = (function () {
         showFilterButton();
     });
 
-
     // TODO: Implement userControllers.signOut instead of callback
     var sgnOutBtn = $('#btnsgnout').click(function () {
         hideFilterContainer();
-        Parse.User.logOut().then(
-            function () {
-                toastr.success('You successfully logged out!');
-                loginView();
-            },
-            function () {
-                toastr.error('There was an error while logging out! :(')
-            });
+        userControllers.signOut();
     });
 
     function setInitialDateToUI() {
@@ -73,15 +63,9 @@ var renderer = (function () {
             $('#signup').submit(userControllers.signUp);
             $('#btnsgnin').click(loginView);
         });
-
-        userBtn.hide();
-        sgnOutBtn.hide();
     }
 
     function loginView() {
-        userBtn.hide();
-        sgnOutBtn.hide();
-
         $('#mainContent').load('partials/login.html', function () {
             $('#signin').submit(userControllers.signIn);
             $('#btnrgstr').click(registerView);
@@ -118,13 +102,6 @@ var renderer = (function () {
     }
 
     function postsView() {
-        userBtn.html(Parse.User.current().getUsername() + ' posts').show();
-        $('#userProfile').html(Parse.User.current().getUsername());
-
-        sgnOutBtn.show();
-
-        $('#posts').addClass('active');
-
         var data;
         var query = new Parse.Query('Post');
         query.ascending('day');
@@ -143,7 +120,6 @@ var renderer = (function () {
 
     function createPostView() {
         hideFilterContainer();
-        $('#makepost').addClass('active');
 
         $('#mainContent').load('partials/createPost.html', function () {
             $('#btnrst').click(function () {
@@ -156,12 +132,10 @@ var renderer = (function () {
 
     function userView() {
         hideFilterContainer();
-        $('#user').addClass('active');
 
         $('#mainContent').html('');
 
         // TODO: Figure out how to run them in this specific order, synchronously
-
 
         getUpcomingPostsByUser();
         getPastPostsByUser();

@@ -4,6 +4,7 @@ import 'bower_components/parse-1.5.0/index.js';
 import 'bower_components/jquery/dist/jquery.js'
 
 import renderer from './renderer.js';
+import userControllers from './userControllers.js'
 
 (function() {
     Parse.initialize("oXLbvSKFI0HQJAT5QCpStZbr0Lx5Upt4j6MJFh92", "KAtLgD0vTTYionS73fIxYY1XYWGedKaUgXvzFd26");
@@ -29,10 +30,12 @@ import renderer from './renderer.js';
     };
 
     if (!Parse.User.current()) {
+        userControllers.hideUserControls();
         renderer.loginView();
     } else {
         if (location.hash !== '#posts') {
             location.assign('#posts');
+            userControllers.showUserControls();
         } else {
             renderer.postsView();
         }
