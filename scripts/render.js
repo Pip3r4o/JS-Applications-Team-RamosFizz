@@ -70,6 +70,7 @@ function registerView() {
     });
     userBtn.hide();
     sgnOutBtn.hide();
+    $('#userProfile').html('');
 }
 
 function loginView() {
@@ -79,6 +80,7 @@ function loginView() {
     });
     userBtn.hide();
     sgnOutBtn.hide();
+    $('#userProfile').html('');
 }
 
 function renderFilteredPostsView() {
@@ -101,7 +103,10 @@ function renderFilteredPostsView() {
 }
 
 function postsView() {
-    userBtn.show();
+
+    userBtn.html(Parse.User.current().getUsername() + ' posts').show();
+    $('#userProfile').html(Parse.User.current().getUsername());
+
     sgnOutBtn.show();
 
     $('#posts').addClass('active');

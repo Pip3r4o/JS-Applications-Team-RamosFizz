@@ -7,6 +7,9 @@ function signIn() {
     if (!Parse.User.current()) {
         Parse.User.logIn(username, password)
             .then(function () {
+                $('#user').html(Parse.User.current().getUsername() + ' posts');
+                $('#userProfile').html(Parse.User.current().getUsername());
+
                 toastr.success('Successfully logged in!');
                 //renderPostsView();
                 location.assign('#posts');
