@@ -3,7 +3,7 @@
 import controllers from './controllers.js';
 import userControllers from './userControllers.js';
 
-var renderer = function() {
+var renderer = (function () {
     var userBtn = $('#user');
 
     function showFilterButton() {
@@ -50,6 +50,7 @@ var renderer = function() {
     });
 
 
+    // TODO: Implement userControllers.signOut instead of callback
     var sgnOutBtn = $('#btnsgnout').click(function () {
         hideFilterContainer();
         Parse.User.logOut().then(
@@ -72,19 +73,19 @@ var renderer = function() {
             $('#signup').submit(userControllers.signUp);
             $('#btnsgnin').click(loginView);
         });
+
         userBtn.hide();
         sgnOutBtn.hide();
-        $('#userProfile').html('');
     }
 
     function loginView() {
+        userBtn.hide();
+        sgnOutBtn.hide();
+
         $('#mainContent').load('partials/login.html', function () {
             $('#signin').submit(userControllers.signIn);
             $('#btnrgstr').click(registerView);
         });
-        userBtn.hide();
-        sgnOutBtn.hide();
-        $('#userProfile').html('');
     }
 
     function filteredPostsView() {
@@ -161,6 +162,7 @@ var renderer = function() {
 
         // TODO: Figure out how to run them in this specific order, synchronously
 
+
         getUpcomingPostsByUser();
         getPastPostsByUser();
         getOtherPostsOfUser();
@@ -172,7 +174,7 @@ var renderer = function() {
             .greaterThanOrEqualTo('day', new Date())
             .find()
             .then(function (posts) {
-                controllers.generateUserPostsFromTemplate(posts, 'Panding posts!');
+                controllers.generateUserPostsFromTemplate(posts, 'Pending trips!');
             }, function (err) {
                 console.log(err);
             })
@@ -248,6 +250,6 @@ var renderer = function() {
         createPostView: createPostView,
         userView: userView
     }
-}();
+}());
 
 export default renderer;

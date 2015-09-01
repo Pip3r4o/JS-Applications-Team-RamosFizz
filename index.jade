@@ -21,21 +21,21 @@ html
             div.blog-masthead
                 div.container
                      nav.blog-nav
-                        div.row
-                            div.col-md-10
+                        .container
+                            .pull-left
                                 a(href="#posts").blog-nav-item.active#posts Posts
                                 a(href="#makepost").blog-nav-item#makepost Create Post
-                                a(href="#user").blog-nav-item#user
-                            div.col-md-2
-                                a(href="#userProfile").blog-nav-item#userProfile
+                            .pull-right#user-nav
+                                a(href="#user").blog-nav-item#userProfile
                                 a(href="#").btn.btn-info.btn-sm#btnsgnout
                                     span.glyphicon.glyphicon-log-out
+
 
         div#mainWindow
 
             #filter.container
                     #filterBtnContainer.row.hidden
-                            button#filterBtn.btn-lg.btn-primary Filter by your choise
+                        button#filterBtn.btn-lg.btn-primary Filter trips
                     #filterMenuContainer.row.col-md-6.centered.hidden
                         .row
                             .col-sm-2
@@ -56,7 +56,7 @@ html
                                     option Plovdiv
                                     option Ruse
                             .col-sm-2
-                        p
+                        br
                         .row
                             .col-sm-3
                             .col-sm-6
@@ -74,14 +74,14 @@ html
                                     option 15 EUR
                                     option 20 EUR
                             .col-sm-2
-                        p
+                        br
                         .row
                             .col-sm-3
                             .col-sm-6
-                                label(for="filteredDriver").text-info Search for driver: (Optional)
+                                label(for="filteredDriver").text-info Search by driver username: (Optional)
                                 input(type="text")#filteredDriver.input-lg
                             .col-sm-2
-                        p
+                        br
                         .row
                             .col-md-2
                             .col-md-3
@@ -143,7 +143,6 @@ html
                             | {{#each this.attributes.usersTraveling}}
                             span.text-info  {{this}} |
                             | {{/each}}
-
                     | {{/each}}
 
         div#footer
@@ -151,6 +150,6 @@ html
                 .container
                     p.text-muted.text-center This is the page's sticky footer - Pending an update - file layout.jade
                     p.text-info.text-center Powered by Bootstrap
-                    div.fb-like(data-href="http://telerikacademy.com/")(data-width="30")(data-layout="box_count")(data-action="like")(data-show-faces="true")(data-share="true")
+                    div.fb-like(data-href="http://telerikacademy.com/" data-width="30" data-layout="box_count" data-action="like" data-show-faces="true" data-share="true")
 
 

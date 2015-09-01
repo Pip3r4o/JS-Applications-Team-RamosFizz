@@ -4,7 +4,7 @@ import validator from './validator.js';
 import renderer from './renderer.js';
 import Post from './post.js';
 
-var controllers = function() {
+var controllers = (function() {
     function reserveSeat(ev) {
         var tar = ev.target;
 
@@ -87,22 +87,22 @@ var controllers = function() {
             seats   = ($('#seatsslct option:selected').text() * 1),
             price   = $('#priceslct option:selected').text();
 
-        if (!validator.mobileNumberValidation(contact)) {
+        if (!validator.postCreationValidation.mobileNumberValidation(contact)) {
             toastr.error('Mobile number is not in a valid BG format!');
             return false;
         }
 
-        if (!validator.destinationValidation(from, to)) {
+        if (!validator.postCreationValidation.destinationValidation(from, to)) {
             toastr.error('You must travel from/to a town different to the place of departure!');
             return false;
         }
 
-        if (!validator.dateValidation(day)) {
+        if (!validator.postCreationValidation.dateValidation(day)) {
             toastr.error('You cannot create a post that is due previous date!');
             return false;
         }
 
-        if (!validator.titleValidation(title)) {
+        if (!validator.postCreationValidation.titleValidation(title)) {
             toastr.info('Title is too short or too long, converted to default format!');
             title = from + ' - ' + to + ' [' + day.getDate() + '/' + ((day.getMonth() * 1) + 1) + '/' + day.getFullYear() + '] ' + ' (' + author + ')';
         }
@@ -120,6 +120,6 @@ var controllers = function() {
         generateUserPostsFromTemplate: generateUserPostsFromTemplate,
         createPost: createPost
     }
-}();
+}());
 
 export default controllers

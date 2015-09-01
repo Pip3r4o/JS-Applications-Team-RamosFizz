@@ -1,6 +1,9 @@
 'use strict';
 
-var userControllers = function() {
+import validator from './validator.js';
+import renderer from './renderer.js';
+
+var userControllers = (function () {
     function signIn() {
         var username = $('#inputUsername').val().toLowerCase(),
             password = $('#inputPassword').val();
@@ -8,11 +11,7 @@ var userControllers = function() {
         if (!Parse.User.current()) {
             Parse.User.logIn(username, password)
                 .then(function () {
-                    $('#user').html(Parse.User.current().getUsername() + ' posts');
-                    $('#userProfile').html(Parse.User.current().getUsername());
-
                     toastr.success('Successfully logged in!');
-                    //renderPostsView();
                     location.assign('#posts');
                 }, function (err) {
                     console.log(err);
@@ -27,56 +26,70 @@ var userControllers = function() {
     }
 
     function signUp() {
-        var emailRegEx = /\b[A-Z0-9._%+-]+@(?:[A-Z0-9-]+\.)+[A-Z]{2,4}\b/ig;
-        var username   = $('#registerUsername').val(),
-            fName      = $('#registerFName').val(),
-            lName      = $('#registerLName').val(),
-            email      = $('#registerEmail').val(),
-            password   = $('#registerPassword').val();
-        var deferred   = new Promise(function (resolve, reject) {
-            if (!(emailRegEx.exec(email))) {
-                reject('Invalid Email!');
-                return;
-            }
-            if (password.length < 6) {
-                reject('Password must contain 6 or more characters');
-                return;
-            }
-            if (username.length < 5) {
-                reject('Username must contain 5 or more characters');
-                return;
-            }
+        var username = $('#registerUsername').val(),
+            fName    = $('#registerFName').val(),
+            lName    = $('#registerLName').val(),
+            email    = $('#registerEmail').val(),
+            password = $('#registerPassword').val();
 
-            resolve({
-                username: username.toLowerCase(),
-                password: password,
-                email: email,
-                fName: fName,
-                lName: lName
-            });
+        if (!validator.userRegistrationValidation.emailValidation(email)) {
+            toastr.error('Invalid email format. Please enter a valid email!');
+            return false;
+        }
 
-        }).then(function (values) {
-                Parse.User.signUp(values.username, values.password,
-                    {email: values.email, fName: values.fName, lName: values.lName})
-                    .then(function () {
-                        toastr.success('Successfully signed up!');
-                        location.assign('#post')
-                    },
-                    function (err) {
-                        console.log(err);
-                        toastr.error('Error ' + err.code + ': ' + err.message);
-                    });
+        if (!validator.userRegistrationValidation.passwordLengthValidation(password)) {
+            toastr.error('Password must contain 6 or more characters');
+            return false;
+        }
+
+        if (!validator.userRegistrationValidation.usernameValidation(username)) {
+            toastr.error('Username must be between 8 and 20 characters and contain alphanumeric characters, underscores (_) or dots (.)');
+            return false;
+        }
+
+        var credentials = {
+            username: username.toLowerCase(),
+            password: password,
+            email: email,
+            fName: fName,
+            lName: lName
+        };
+
+        Parse.User.signUp(credentials.username, credentials.password, {
+            email: credentials.email,
+            fName: credentials.fName,
+            lName: credentials.lName
+        })
+            .then(function () {
+                toastr.success('Successfully signed up!');
+                location.assign('#post')
             },
-            function (error) {
-                toastr.error(error);
+            function (err) {
+                console.log(err);
+                toastr.error('Error ' + err.code + ': ' + err.message);
             });
+
         return false;
+    }
+
+    // TODO: Implement for signOut button
+    function signOut() {
+        Parse.User.logOut().then(
+            function () {
+                toastr.success('You successfully logged out!');
+                renderer.loginView();
+            },
+            function () {
+                toastr.error('There was an error while logging out! :(');
+            });
     }
 
     return {
         signIn: signIn,
-        signUp: signUp
+        signUp: signUp,
+        signOut: signOut
     }
-}();
+
+}());
 
 export default userControllers

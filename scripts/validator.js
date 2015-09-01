@@ -1,48 +1,90 @@
-'use strict';
+var validator = (function () {
+    var postCreationValidation = function() {
+        function dateValidation(date) {
+            let created = new Date();
 
-var validator = function () {
-    function dateValidation(date) {
-        let created = new Date();
+            if (date - created < 0) {
+                return false;
+            }
 
-        if (date - created < 0) {
-            return false;
+            return true;
         }
 
-        return true;
-    }
+        function destinationValidation(from, to) {
+            if (from === to) {
+                return false;
+            }
 
-    function destinationValidation(from, to) {
-        if (from === to) {
-            return false;
+            return true;
         }
 
-        return true;
-    }
+        function mobileNumberValidation(contact) {
+            let numberRegEx = /^(\+359|0)\s?8(\d{2}\s\d{6}|[789]\d{7})$/igm;
 
-    function mobileNumberValidation(contact) {
-        let numberRegEx = /^(\+359|0)\s?8(\d{2}\s\d{6}|[789]\d{7})$/igm;
+            if (!(numberRegEx.exec(contact))) {
+                return false;
+            }
 
-        if (!(numberRegEx.exec(contact))) {
-            return false;
+            return true;
         }
 
-        return true;
-    }
+        function titleValidation(title) {
+            if (title.length < 15 || title.length > 35) {
+                return false;
+            }
 
-    function titleValidation(title) {
-        if (title.length < 15 || title.length > 35) {
-            return false;
+            return true;
         }
 
-        return true;
-    }
+        return {
+            dateValidation: dateValidation,
+            destinationValidation: destinationValidation,
+            mobileNumberValidation: mobileNumberValidation,
+            titleValidation: titleValidation
+        };
+    }();
+
+    var userRegistrationValidation = function() {
+        function emailValidation(email) {
+            var emailRegEx = /\b[A-Z0-9._%+-]+@(?:[A-Z0-9-]+\.)+[A-Z]{2,4}\b/ig;
+
+            if (!(emailRegEx.exec(email))) {
+                return false;
+            }
+
+            return true;
+        }
+
+        function passwordLengthValidation(password) {
+            if (password.length < 6) {
+                return false;
+            }
+
+            return true;
+        }
+
+        function usernameValidation(username) {
+            var usernameRegEx = /^[a-zA-Z0-9](_(?!(\.|_))|\.(?!(_|\.))|[a-zA-Z0-9]){6,18}[a-zA-Z0-9]$/igm;
+
+            if (!(usernameRegEx.exec(username))) {
+                return false;
+            }
+
+            return true;
+        }
+
+        return {
+            emailValidation: emailValidation,
+            passwordLengthValidation: passwordLengthValidation,
+            usernameValidation: usernameValidation
+        }
+
+    }();
 
     return {
-        dateValidation: dateValidation,
-        destinationValidation: destinationValidation,
-        mobileNumberValidation: mobileNumberValidation,
-        titleValidation: titleValidation
-    };
-}();
+        postCreationValidation: postCreationValidation,
+        userRegistrationValidation: userRegistrationValidation
+    }
+}());
 
 export default validator;
