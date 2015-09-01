@@ -148,7 +148,7 @@ function createPostView() {
             $('#createpostcntnr form').trigger("reset");
         });
         setInitialDateToUI();
-        $('#createpostcntnr').submit(controllers.createPost);
+        $('#createpostcntnr').submit(createPost);
     });
 }
 

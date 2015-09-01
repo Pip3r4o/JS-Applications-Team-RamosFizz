@@ -1,33 +1,7 @@
 'use strict'
 
-import validator from './validator.js';
+import {validator} from './validator.js';
 import render from './render.js';
-
-var Post = Parse.Object.extend('Post', {
-    create: function (author, title, contact, from, to, day, seats, price) {
-        this.save({
-            'user': Parse.User.current(),
-            'author': author,
-            'title': title,
-            'contact': contact,
-            'from': from,
-            'to': to,
-            'day': day,
-            'seats': seats,
-            'price': price,
-            'otherTrips': [],
-            'usersTraveling': []
-        }, {
-            success: function (post) {
-                toastr.info('You added a new post: ' + post.get('title'));
-            },
-            error: function (post, error) {
-                toastr.error(post);
-                toastr.error(error);
-            }
-        });
-    }
-});
 
 function generatePostsFromTemplate(data, tamplateSelector) {
     data = {posts: data};
@@ -88,29 +62,23 @@ function createPost() {
     var author = Parse.User.current().get('username'),
         title = $('#titleinpt').val(),
         contact = $('#contactinpt').val(),
-        from = $('#postfrom option:selected').text(),
-        to = $('#postto option:selected').text(),
+        from = $('#fromslct option:selected').text(),
+        to = $('#toslct option:selected').text(),
         day = new Date($('#yy option:selected').text(),
             ($('#mm option:selected').text() * 1) - 1,
             $('#dd option:selected').text(),
             $('#hourslct option:selected').text(),
             $('#minuteslct option:selected').text(), 0),
         seats = ($('#seatsslct option:selected').text() * 1),
-        price = $('#postprice option:selected').text();
+        price = $('#priceslct option:selected').text();
 
-    if(!validator.date(day)) {
-        return false;
-    }
+    validator.date(day);
 
-    if(!validator.destination(from, to)) {
-        return false;
-    }
+    validator.destination(from, to);
 
-    if(!validator.telephone(contact)){
-        return false;
-    }
+    validator.telephone(contact);
 
-    title = validator.title(title, day, author, from, to);
+    title = validator.title(title, day, author);
 
     var post = new Post();
     post.create(author, title, contact, from, to, day, seats, price);
