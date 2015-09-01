@@ -86,8 +86,18 @@ function loginView() {
 function renderFilteredPostsView() {
     var fromSelect = $('#fromslct').val(),
         toSelect = $('#toslct').val(),
+        priceSelect=$('#priceslct').val(),
+        userInput=$('#filteredDriver').val(),
         query = new Parse.Query('Post'),
         data;
+
+    if(priceSelect!=='-'){
+        query.contains('price',priceSelect);
+    }
+    
+    if(userInput!==''){
+        query.equalTo('author',userInput);
+    }
 
     query.contains('from', fromSelect)
     query.contains('to', toSelect)

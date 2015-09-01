@@ -58,6 +58,31 @@ html
                             .col-sm-2
                         p
                         .row
+                            .col-sm-3
+                            .col-sm-6
+                                label(for="priceslct").text-info Maximum price per seat: (Optional)
+                                select.form-control#priceslct
+                                    option -
+                                    option Free
+                                    option 10 BGN
+                                    option 15 BGN
+                                    option 20 BGN
+                                    option 25 BGN
+                                    option 30 BGN
+                                    option 5 EUR
+                                    option 10 EUR
+                                    option 15 EUR
+                                    option 20 EUR
+                            .col-sm-2
+                        p
+                        .row
+                            .col-sm-3
+                            .col-sm-6
+                                label(for="filteredDriver").text-info Search for driver: (Optional)
+                                input(type="text")#filteredDriver.input-lg
+                            .col-sm-2
+                        p
+                        .row
                             .col-md-2
                             .col-md-3
                                 button#searchFilterBtn.btn.btn-success Search
