@@ -3,8 +3,15 @@
  */
 
 body {
-    font-family: Georgia, "Times New Roman", Times, serif;
-    color: #555;
+    background: url('../assets/bg/sky.jpg') no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    color: #000;
+    background-color: #333;
+
+    font-family: Verdana, Arial, "Times New Roman", Times, serif;
 }
 
 h1, .h1,
@@ -230,8 +237,10 @@ h6, .h6 {
 }
 
 .panel-body {
+    background-color: rgba(255, 255, 255, 0.4);
     padding: 10px;
     border: 1px solid #aaf;
+    border-radius: 5px;
     margin-bottom: 10px
 }
 
@@ -240,12 +249,22 @@ h6, .h6 {
 }
 
 .panel {
+    background-color: rgba(0, 0, 0, 0.2);
+    margin: 10px;
     padding: 10px;
 }
 
 .panel-title {
+    background-color: rgba(66, 139, 202, 0.6);
+    font-size: 1.1em;
+    color: #fff;
     padding: 10px;
     margin-bottom: 15px;
+    border-radius: 5px;
+}
+
+.panel-body .panel-title {
+    background-color: rgba(66, 139, 202, 1);
 }
 
 #createpostcntnr {
@@ -267,7 +286,7 @@ h6, .h6 {
 }
 
 .hidden {
-    display:none;
+    display: none;
 }
 
 .centered {
@@ -280,5 +299,17 @@ h6, .h6 {
     margin-top: 15px;
     margin-bottom: 10px;
     width: 75%;
+}
+
+.white {
+    color: #eee
+}
+
+form label {
+    color: #fff
+}
+
+#mainContent {
+    padding-top: 55px;
 }
 

@@ -25,19 +25,24 @@ var renderer = (function () {
         });
     }
 
-    function filteredPostsView() {
-        var fromSelect  = $('#from-select-filter').val(),
-            toSelect    = $('#to-select-filter').val(),
-            userInput   = $('#filteredDriver').val(),
-            query       = new Parse.Query('Post'),
+    function filteredPostsView(e) {
+        var fromSelect = $('#from-select-filter').val(),
+            toSelect   = $('#to-select-filter').val(),
+            userInput  = $('#filteredDriver').val(),
+            query      = new Parse.Query('Post'),
             data;
+
+        e.preventDefault();
 
         if (userInput !== '') {
             query.contains('author', userInput);
         }
 
+        query.greaterThan('day', new Date());
+        query.greaterThan('seats', 0);
         query.contains('from', fromSelect);
         query.contains('to', toSelect);
+
         query.find().then(function (res) {
             data = res;
             if (res.length === 0) {
@@ -47,7 +52,7 @@ var renderer = (function () {
 
             controllers.generatePostsFromTemplate(data, '#post-template');
 
-        return false;
+            e.preventDefault();
         })
     }
 
@@ -59,7 +64,8 @@ var renderer = (function () {
 
         var $filterRevealButton = $('<button />').addClass('btn btn-primary btn-md center-block').html('Filter').appendTo($container);
 
-        var $filter = $('<div />').attr('id', 'filter').addClass('container panel-body').css('display', 'none').appendTo($container);
+        var $filter = $('<div />').attr('id', 'filter').addClass('container panel-body').css('display',
+            'none').appendTo($container);
 
         var $content = $('<div />').attr('id', 'content').appendTo($container);
 
@@ -69,11 +75,11 @@ var renderer = (function () {
         query.find().then(function (res) {
             data = res;
 
-            $filterRevealButton.click(function() {
+            $filterRevealButton.click(function () {
                 $filter.toggle();
             });
 
-            $filter.load('partials/filter.html', function() {
+            $filter.load('partials/filter.html', function () {
                 $filter.submit(filteredPostsView);
                 $('#btn-cancel-filter').click(function () {
                     $('#filter form').trigger('reset');

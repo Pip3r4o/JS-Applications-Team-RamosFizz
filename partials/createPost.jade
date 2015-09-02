@@ -1,17 +1,17 @@
 .container.panel-body#createpostcntnr
-    h3.blog-post-title Create a travel post
+    h3.blog-post-title.white Create a travel post
     form.input-group-sm.text-center
         .row
             .col-sm-6
-                label(for="titleinpt").text-info Title:
+                label(for="titleinpt") Title:
                 input(type="text" required)#titleinpt.input-md
             .col-sm-6
-                label(for="contactinpt").text-info Mobile:
+                label(for="contactinpt") Mobile:
                 input(type="text" required)#contactinpt.input-md
         .row
             .col-sm-2
             .col-sm-4
-                label(for="fromslct").text-info From:
+                label(for="fromslct") From:
                 select.form-control#fromslct
                     option Sofia
                     option Burgas
@@ -19,7 +19,7 @@
                     option Plovdiv
                     option Ruse
             .col-sm-4
-                label(for="toslct").text-info To:
+                label(for="toslct") To:
                 select#toslct.form-control
                     option Sofia
                     option Burgas
@@ -28,7 +28,7 @@
                     option Ruse
             .col-sm-2
 
-        label(for="dayslct").text-info Day of departure:
+        label(for="dayslct") Day of departure:
         .row#dayslct
             .col-xs-2
             .col-xs-2
@@ -83,7 +83,7 @@
                     option 2015
             .col-xs-2
 
-        label.text-info Time of departure:
+        label Time of departure:
         .row
             .col-xs-2
             .col-xs-4
@@ -128,7 +128,7 @@
         .row
             .col-sm-2
             .col-sm-4
-                label(for="seatsslct").text-info Available seats:
+                label(for="seatsslct") Available seats:
                 select.form-control#seatsslct
                     option 1
                     option 2
@@ -136,7 +136,7 @@
                     option 4
                     option 5
             .col-sm-4
-                label(for="priceslct").text-info Price per seat:
+                label(for="priceslct") Price per seat:
                 select.form-control#priceslct
                     option Free
                     option 10 BGN

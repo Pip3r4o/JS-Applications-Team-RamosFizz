@@ -18,7 +18,7 @@ html
         script (function(d, s, id) {var js, fjs = d.getElementsByTagName(s)[0];if (d.getElementById(id)) return;js = d.createElement(s); js.id = id;js.src = "//connect.facebook.net/bg_BG/sdk.js#xfbml=1&version=v2.4";fjs.parentNode.insertBefore(js, fjs);}(document, 'script', 'facebook-jssdk'))
 
         div#header
-            div.blog-masthead
+            div.blog-masthead.navbar-fixed-top
                 div.container
                      nav.blog-nav
                         .container
@@ -42,27 +42,27 @@ html
                     p
                     .panel-body
                         p.hidden.postid {{this.id}}
-                        p.panel-title.bg-info {{this.attributes.title}}
+                        p.panel-title {{this.attributes.title}}
                         p Author:
-                            span.text-info {{this.attributes.author}}
+                            span.white {{this.attributes.author}}
                         p Mobile:
-                            span.text-info {{this.attributes.contact}}
+                            span.white {{this.attributes.contact}}
                         .row
                             .col-md-2
                                 p From:
-                                    span.text-primary {{this.attributes.from}}
+                                    span.white {{this.attributes.from}}
                             .col-md-2
                                 p To:
-                                    span.text-primary {{this.attributes.to}}
+                                    span.white {{this.attributes.to}}
                             .col-md-4
                                 p When:
-                                    span.text-primary {{this.attributes.day}}
+                                    span.white {{this.attributes.day}}
                             .col-md-2
                                 p Seats:
-                                    span.text-primary {{this.attributes.seats}}
+                                    span.white {{this.attributes.seats}}
                             .col-md-2
                                 p Price:
-                                    span.text-primary {{this.attributes.price}}
+                                    span.white {{this.attributes.price}}
                         button.btn.btn-primary.btn-sm.pull-right.btn-reserve-seat Get a seat!
                     | {{/each}}
 
@@ -73,34 +73,34 @@ html
                     | {{#each posts}}
                     .panel-body
                         p.hidden.postid {{this.id}}
-                        p.panel-title.bg-info {{this.attributes.title}}
+                        p.panel-title {{this.attributes.title}}
                         .row
                             .col-md-2
                                 p From:
-                                    span.text-primary {{this.attributes.from}}
+                                    span.white {{this.attributes.from}}
                             .col-md-2
                                 p To:
-                                    span.text-primary {{this.attributes.to}}
+                                    span.white {{this.attributes.to}}
                             .col-md-4
                                 p When:
-                                    span.text-primary {{this.attributes.day}}
+                                    span.white {{this.attributes.day}}
                             .col-md-2
                                 p Seats:
-                                    span.text-primary {{this.attributes.seats}}
+                                    span.white {{this.attributes.seats}}
                             .col-md-2
                                 p Price:
-                                    span.text-primary {{this.attributes.price}}
-                        .p.text-muted Users:
+                                    span.white {{this.attributes.price}}
+                        p Users:
                             | {{#each this.attributes.usersTraveling}}
-                            span.text-info  {{this}} |
+                            span.text-danger  {{this}} |
                             | {{/each}}
                     | {{/each}}
 
         div#footer
             footer.footer.clearfix
                 .container
-                    p.text-muted.text-center This is the page's sticky footer - Pending an update - file layout.jade
-                    p.text-info.text-center Powered by Bootstrap
+                    p.text-center Created by team Ramos Fizz @Telerik Academy 2015-2016
+                    p.text-center Powered by Bootstrap, jQuery, Parse JS SDK
                     div.fb-like(data-href="http://telerikacademy.com/" data-width="30" data-layout="box_count" data-action="like" data-show-faces="true" data-share="true")
 
 
