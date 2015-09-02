@@ -109,7 +109,7 @@ describe('Validator tests - userRegistrationValidation.emailValidation',function
     });
 });
 
-describe('Validator tests - postCreationValidation.passwordLengthValidation',function(){
+describe('Validator tests - userRegistrationValidation.passwordLengthValidation',function(){
     it('Expect to return true, when password symbols are in range',function(){
         var validPass='123456';
         var actual=validator.userRegistrationValidation.passwordLengthValidation(validPass);
@@ -125,7 +125,7 @@ describe('Validator tests - postCreationValidation.passwordLengthValidation',fun
     });
 });
 
-describe('Validator tests - postCreationValidation.usernameValidation',function(){
+describe('Validator tests - userRegistrationValidation.usernameValidation',function(){
     it('Expect to return true, when username is valid between 8 and 20 symbols, it is alphanumeric and has only dots(.) or/and underscores(_)',function(){
         var validUserName='user_23.4'
         var actual=validator.userRegistrationValidation.usernameValidation(validUserName);
