@@ -95,3 +95,5 @@ var validator = (function () {
         userRegistrationValidation: userRegistrationValidation
     }
 }());
+
+module.exports=validator;

@@ -4,6 +4,7 @@
   "description": "Public repository for the realization of a javascript application with backend logic and OOP design practices",
   "main": "index.js",
   "dependencies": {
+    "babel": "^5.8.23",
     "babel-core": "^5.8.23",
     "chai": "^3.2.0",
     "handlebars": "^3.0.3",
