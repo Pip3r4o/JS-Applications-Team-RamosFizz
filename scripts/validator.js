@@ -32,7 +32,11 @@ var validator = (function () {
         }
 
         function titleValidation(title) {
-            if (title.length < 15 || title.length > 35) {
+            const MIN_LENGTH=15;
+            const MAX_LENGTH=35;
+
+
+            if (title.length < MIN_LENGTH || title.length > MAX_LENGTH) {
                 return false;
             }
 
@@ -49,7 +53,7 @@ var validator = (function () {
 
     var userRegistrationValidation = function() {
         function emailValidation(email) {
-            var emailRegEx = /\b[A-Z0-9._%+-]+@(?:[A-Z0-9-]+\.)+[A-Z]{2,4}\b/ig;
+            var emailRegEx = /\b[A-Z0-9._%+-]+@(?:[A-Z0-9-]{2,}\.)+[A-Z]{2,4}\b/ig;
 
             if (!(emailRegEx.exec(email))) {
                 return false;
@@ -59,7 +63,9 @@ var validator = (function () {
         }
 
         function passwordLengthValidation(password) {
-            if (password.length < 6) {
+            const MIN_LENGTH=6;
+
+            if (password.length < MIN_LENGTH) {
                 return false;
             }
 

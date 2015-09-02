@@ -56,6 +56,29 @@ describe('Validator tests - postCreationValidation.mobileNumberValidation',funct
     });
 });
 
+describe('Validator tests - postCreationValidation.titleValidation',function(){
+    it('Expect to return true, when title is in range',function(){
+        var validTitle='123456789123456789';
+        var actual=validator.postCreationValidation.titleValidation(validTitle);
+
+        expect(actual).to.be.true;
+    });
+
+    it('Expect to return false, when title is too short',function(){
+        var shortInvalidTitle='1';
+        var actual=validator.postCreationValidation.titleValidation(shortInvalidTitle);
+
+        expect(actual).to.be.false;
+    });
+
+    it('Expect to return false, when title is too long',function(){
+        var longInvalidTitle='123456789123456789123456789123456789';
+        var actual=validator.postCreationValidation.titleValidation(longInvalidTitle);
+
+        expect(actual).to.be.false;
+    });
+});
+
 describe('Validator tests - userRegistrationValidation.emailValidation',function(){
     it('Expect to return true, when email is valid',function(){
         var validMail='user@gmail.com';
@@ -85,3 +108,50 @@ describe('Validator tests - userRegistrationValidation.emailValidation',function
         expect(actual).to.be.false;
     });
 });
+
+describe('Validator tests - postCreationValidation.passwordLengthValidation',function(){
+    it('Expect to return true, when password symbols are in range',function(){
+        var validPass='123456';
+        var actual=validator.userRegistrationValidation.passwordLengthValidation(validPass);
+
+        expect(actual).to.be.true;
+    });
+
+    it('Expect to return false, when password symbols are not enough',function(){
+        var shortInvalidTitle='12345';
+        var actual=validator.userRegistrationValidation.passwordLengthValidation(shortInvalidTitle);
+
+        expect(actual).to.be.false;
+    });
+});
+
+describe('Validator tests - postCreationValidation.usernameValidation',function(){
+    it('Expect to return true, when username is valid between 8 and 20 symbols, it is alphanumeric and has only dots(.) or/and underscores(_)',function(){
+        var validUserName='user_23.4'
+        var actual=validator.userRegistrationValidation.usernameValidation(validUserName);
+
+        expect(actual).to.be.true;
+    });
+
+    it('Expect to return false, when username with too short name is presented',function(){
+        var shortInvalidUserName='user';
+        var actual=validator.userRegistrationValidation.usernameValidation(shortInvalidUserName);
+
+        expect(actual).to.be.false;
+    });
+
+    it('Expect to return false, when username with too long name is presented',function(){
+        var longInvalidUserName='user_user_user_user_user_user';
+        var actual=validator.userRegistrationValidation.usernameValidation(longInvalidUserName);
+
+        expect(actual).to.be.false;
+    });
+
+    it('Expect to return false, when username with name in range of symbols, but with invalid ones',function(){
+        var symbolsInvalidName='user$$$$$';
+        var actual=validator.userRegistrationValidation.usernameValidation(symbolsInvalidName);
+
+        expect(actual).to.be.false;
+    });
+});
+
