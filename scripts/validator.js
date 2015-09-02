@@ -1,9 +1,13 @@
+'use strict';
+
 var validator = (function () {
     var postCreationValidation = function() {
         function dateValidation(date) {
             let created = new Date();
+            let differenceInDatesInDays=Math.abs((date - created)/1000/60/60/24);
+            console.log(differenceInDatesInDays)
 
-            if (date - created < 0) {
+            if (differenceInDatesInDays > 1) {
                 return false;
             }
 
