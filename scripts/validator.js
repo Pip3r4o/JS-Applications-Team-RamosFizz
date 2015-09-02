@@ -7,7 +7,7 @@ var validator = (function () {
             let differenceInDatesInDays=(date - created)/1000/60/60/24;
             console.log(differenceInDatesInDays)
 
-            if (differenceInDatesInDays < -1) {
+            if (differenceInDatesInDays <-1) {
                 return false;
             }
 
