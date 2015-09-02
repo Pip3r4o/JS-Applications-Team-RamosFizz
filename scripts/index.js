@@ -33,9 +33,10 @@ import userControllers from './userControllers.js'
         userControllers.hideUserControls();
         renderer.loginView();
     } else {
+        userControllers.showUserControls();
+
         if (location.hash !== '#posts') {
             location.assign('#posts');
-            userControllers.showUserControls();
         } else {
             renderer.postsView();
         }

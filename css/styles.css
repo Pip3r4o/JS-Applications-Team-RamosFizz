@@ -168,10 +168,6 @@ h6, .h6 {
     margin-bottom: 0;
 }
 
-/*
- * Login Form
- */
-
 .form-signin {
     max-width: 330px;
     padding: 15px;
@@ -236,6 +232,7 @@ h6, .h6 {
 .panel-body {
     padding: 10px;
     border: 1px solid #aaf;
+    margin-bottom: 10px
 }
 
 .panel-body button {
@@ -244,10 +241,10 @@ h6, .h6 {
 
 .panel {
     padding: 10px;
-    border: 2px solid #aaf;
 }
 
 .panel-title {
+    padding: 10px;
     margin-bottom: 15px;
 }
 
@@ -269,30 +266,19 @@ h6, .h6 {
 #createpostcntnr button {
 }
 
-.hidden{
+.hidden {
     display:none;
 }
 
-#filter{
-    text-align: center;
-}
-
-#filterBtnContainer{
-    margin:10px;
-}
-
-#filterMenuContainer{
-    border:solid 2px #d5d5d5;
-    border-radius:5px;
-    padding: 10px;
-    float: none;
-}
-
-.centered{
+.centered {
     float: none;
     margin: 0 auto;
 }
 
-.inline{
-    display:inline-block;
+#filter {
+    text-align: center;
+    margin-top: 15px;
+    margin-bottom: 10px;
+    width: 75%;
 }
+

@@ -52,7 +52,7 @@ var controllers = (function() {
         var templateSource = $(tamplateSelector).html();
         var template       = Handlebars.compile(templateSource);
 
-        $('#mainContent').html(template(data));
+        $('#content').html(template(data));
 
         $('#showAllPostsBtn').click(function () {
             renderer.postsView();

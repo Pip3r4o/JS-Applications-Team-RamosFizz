@@ -32,113 +32,64 @@ html
 
 
         div#mainWindow
-
-            #filter.container
-                    #filterBtnContainer.row.hidden
-                        button#filterBtn.btn-lg.btn-primary Filter trips
-                    #filterMenuContainer.row.col-md-6.centered.hidden
-                        .row
-                            .col-sm-2
-                            .col-sm-4
-                                label(for="fromslct").text-info From:
-                                select.form-control#from-select-filter
-                                    option Sofia
-                                    option Burgas
-                                    option Varna
-                                    option Plovdiv
-                                    option Ruse
-                            .col-sm-4
-                                label(for="toslct").text-info To:
-                                select.form-control#to-select-filter
-                                    option Sofia
-                                    option Burgas
-                                    option Varna
-                                    option Plovdiv
-                                    option Ruse
-                            .col-sm-2
-                        br
-                        .row
-                            .col-sm-3
-                            .col-sm-6
-                                label(for="priceslct").text-info Maximum price per seat: (Optional)
-                                select.form-control#price-select-filter
-                                    option -
-                                    option Free
-                                    option 10 BGN
-                                    option 15 BGN
-                                    option 20 BGN
-                                    option 25 BGN
-                                    option 30 BGN
-                                    option 5 EUR
-                                    option 10 EUR
-                                    option 15 EUR
-                                    option 20 EUR
-                            .col-sm-2
-                        br
-                        .row
-                            .col-sm-3
-                            .col-sm-6
-                                label(for="filteredDriver").text-info Search by driver username: (Optional)
-                                input(type="text")#filteredDriver.input-lg
-                            .col-sm-2
-                        br
-                        .row
-                            .col-md-2
-                            .col-md-3
-                                button#searchFilterBtn.btn.btn-success Search
-                            .col-md-2
-                            .col-md-3
-                                button#cancelFilterBtn.btn.btn-danger Cancel
-                            .col-md-2
-
             div#mainContent
 
         script(type="text/handlebars-template")#post-template
             .container
-                h3.blog-main Sharing is caring - Share a trip!
                 .panel
-                    h2.panel-title.inline Find other people to travel with!
-                    button#showAllPostsBtn.btn-sm.btn-primary.pull-right Show all posts
+                    button#showAllPostsBtn.btn-sm.btn-primary.centered Fetch all posts
                     | {{#each posts}}
                     p
                     .panel-body
                         p.hidden.postid {{this.id}}
-                        p.panel-title {{this.attributes.title}}
-                        p.text-muted Author: {{this.attributes.author}}
-                        p.text-muted Mobile: {{this.attributes.contact}}
+                        p.panel-title.bg-info {{this.attributes.title}}
+                        p Author:
+                            span.text-info {{this.attributes.author}}
+                        p Mobile:
+                            span.text-info {{this.attributes.contact}}
                         .row
                             .col-md-2
-                                p.text-muted From: {{this.attributes.from}}
+                                p From:
+                                    span.text-primary {{this.attributes.from}}
                             .col-md-2
-                                p.text-muted To: {{this.attributes.to}}
+                                p To:
+                                    span.text-primary {{this.attributes.to}}
                             .col-md-4
-                                p.text-muted When: {{this.attributes.day}}
+                                p When:
+                                    span.text-primary {{this.attributes.day}}
                             .col-md-2
-                                p.text-muted Seats: {{this.attributes.seats}}
+                                p Seats:
+                                    span.text-primary {{this.attributes.seats}}
                             .col-md-2
-                                p.text-muted Price: {{this.attributes.price}}
+                                p Price:
+                                    span.text-primary {{this.attributes.price}}
                         button.btn.btn-primary.btn-sm.pull-right.btn-reserve-seat Get a seat!
                     | {{/each}}
 
         script(type="text/handlebars-template")#user-post-template
             .container
                 .panel
-                    h2.panel-title {{type}}
+                    h2.panel-title.bg-success {{type}}
                     | {{#each posts}}
                     .panel-body
                         p.hidden.postid {{this.id}}
-                        p.panel-title {{this.attributes.title}}
+                        p.panel-title.bg-info {{this.attributes.title}}
                         .row
                             .col-md-2
-                                p.text-muted From: {{this.attributes.from}}
+                                p From:
+                                    span.text-primary {{this.attributes.from}}
                             .col-md-2
-                                p.text-muted To: {{this.attributes.to}}
+                                p To:
+                                    span.text-primary {{this.attributes.to}}
                             .col-md-4
-                                p.text-muted When: {{this.attributes.day}}
+                                p When:
+                                    span.text-primary {{this.attributes.day}}
                             .col-md-2
-                                p.text-muted Seats: {{this.attributes.seats}}
+                                p Seats:
+                                    span.text-primary {{this.attributes.seats}}
                             .col-md-2
-                                p.text-muted Price: {{this.attributes.price}}
+                                p Price:
+                                    span.text-primary {{this.attributes.price}}
                         .p.text-muted Users:
                             | {{#each this.attributes.usersTraveling}}
                             span.text-info  {{this}} |
