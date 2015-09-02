@@ -3,11 +3,10 @@
 var validator = (function () {
     var postCreationValidation = function() {
         function dateValidation(date) {
-            let created = new Date();
-            let differenceInDatesInDays=(date - created)/1000/60/60/24;
-            console.log(differenceInDatesInDays)
+            let currentDate = new Date();
 
-            if (differenceInDatesInDays <-1) {
+
+            if (date - currentDate < 0) {
                 return false;
             }
 
@@ -90,5 +89,3 @@ var validator = (function () {
         userRegistrationValidation: userRegistrationValidation
     }
 }());
-
-export default validator;

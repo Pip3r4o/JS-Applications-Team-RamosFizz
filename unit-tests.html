@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <link rel="stylesheet" href="node_modules/mocha/mocha.css">
+</head>
+<body>
+<div id="mocha"></div>
+<script src="node_modules/mocha/mocha.js"></script>
+<script src="node_modules/chai/chai.js"></script>
+<script type="text/javascript" src="node_modules/sinon/pkg/sinon-1.16.1.js"></script>
+<script type="text/javascript" src="node_modules/sinon-chai/lib/sinon-chai.js"></script>
+<script>
+    mocha.setup('bdd');
+    var expect = chai.expect;
+</script>
+<!--<script type="text/javascript" src="bower_components/system.js/dist/system.js"></script>-->
+<!--<script type="text/javascript" src="tests/systemjs-tests-configuration.js"></script>-->
+<!--<script type="text/javascript" src="bower_components/jquery/dist/jquery.js"></script>-->
+<!--<script type="text/javascript" src="bower_components/bootstrap/dist/js/bootstrap.js"></script>-->
+<!--<script type="text/javascript" src="bower_components/parse-1.5.0/index.js"></script>-->
+<!--<script type="text/javascript" src="node_modules/toastr/toastr.js"></script>-->
+<!--<script type="text/javascript" src="node_modules/handlebars/dist/handlebars.js"></script>-->
+<script type="text/javascript" src="scripts/validator.js"></script>
+<script type="text/javascript" src="tests/tests.js"></script>
+<script>
+    mocha.run();
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+<!--<script>-->
+    <!--var arr=[1,2,3];-->
+
+    <!--function sum(arr){-->
+        <!--var result=0;-->
+        <!--arr.forEach(function(item){-->
+            <!--result+=item;-->
+        <!--})-->
+
+        <!--return result;-->
+    <!--}-->
+<!--</script>-->
+<!--<script>-->
+<!--describe('#sum',function(){-->
+<!--it('expects sum([]) to return 0', function(){-->
+<!--var actual=sum([]);-->
+<!--expect(actual).to.equal(0);-->
+<!--})-->
+<!--});-->
+<!--describe('#sum',function(){-->
+<!--it('expects sum([]) to return 0', function(){-->
+<!--var actual=sum([]);-->
+<!--expect(actual).to.equal(0);-->
+<!--})-->
+<!--});-->
+<!--</script>-->
