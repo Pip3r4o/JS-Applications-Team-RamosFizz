@@ -96,4 +96,4 @@ var validator = (function () {
     }
 }());
 
-module.exports=validator;
+export default validator;

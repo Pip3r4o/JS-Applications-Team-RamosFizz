@@ -1,5 +1,8 @@
 //run cmd in thid directory and type 'mocha tests-console'. If you have a problem running the tests, watch Doncho's video about running console tests.
-var validator=require('../scripts/validator.js');
+import userControllers from  'scripts/userControllers.js';
+//import {Parse} from 'bower_components/parse-1.5.0/index.js';
+import renderer from 'scripts/renderer.js';
+import validator from 'scripts/validator.js';
 var expect=require('chai').expect;
 
 
