@@ -5,6 +5,26 @@ import renderer from './renderer.js';
 import Post from './post.js';
 
 var controllers = (function() {
+    var isTesting=false;
+
+    function showInfo(msg){
+        if(isTesting){
+            console.log(msg);
+        }
+        else{
+            toastr.info(msg)
+        }
+    }
+
+    function showError(msg){
+        if(isTesting){
+            console.log(msg);
+        }
+        else{
+            toastr.info(msg)
+        }
+    }
+
     function reserveSeat(ev) {
         var tar = ev.target;
 
@@ -16,7 +36,7 @@ var controllers = (function() {
 
         query.get(postID).then(function (post) {
             if (post.get('user').id === user.id) {
-                toastr.error('You cannot reserve a seat for yourself on your own post!');
+                showError('You cannot reserve a seat for yourself on your own post!');
                 return;
             }
             if (!user.get('otherTrips')) {
@@ -26,7 +46,7 @@ var controllers = (function() {
                 post.set('usersTraveling', []);
             }
             if (user.get('otherTrips').indexOf(post.id) >= 0) {
-                toastr.error('You have already reserved a seat for this particular trip!');
+                showError('You have already reserved a seat for this particular trip!');
                 return;
             }
 
@@ -37,11 +57,11 @@ var controllers = (function() {
             post.save().then(function () {
                 user.attributes.otherTrips.push(post.id);
                 user.save();
-                toastr.info('You reserved a seat on trip: ' + post.get('title'));
+                showInfo('You reserved a seat on trip: ' + post.get('title'));
                 location.assign('#user');
             });
         }, function (err) {
-            toastr.error('An error occured while fetching the post. Please try again later!');
+            showError('An error occured while fetching the post. Please try again later!');
             console.log(err);
         });
     }
@@ -54,10 +74,10 @@ var controllers = (function() {
 
         $('#content').html(template(data));
 
+        // TODO: Separete concerns of compiling html template and adding events to buttons after that(Maybe promises)
         $('#showAllPostsBtn').click(function () {
             renderer.postsView();
         });
-
         $('.btn-reserve-seat').click(reserveSeat);
     }
 
@@ -88,22 +108,22 @@ var controllers = (function() {
             price   = $('#priceslct option:selected').text();
 
         if (!validator.postCreationValidation.mobileNumberValidation(contact)) {
-            toastr.error('Mobile number is not in a valid BG format!');
+            showError('Mobile number is not in a valid BG format!');
             return false;
         }
 
         if (!validator.postCreationValidation.destinationValidation(from, to)) {
-            toastr.error('You must travel from/to a town different to the place of departure!');
+            showError('You must travel from/to a town different to the place of departure!');
             return false;
         }
 
         if (!validator.postCreationValidation.dateValidation(day)) {
-            toastr.error('You cannot create a post that is due previous date!');
+            showError('You cannot create a post that is due previous date!');
             return false;
         }
 
         if (!validator.postCreationValidation.titleValidation(title)) {
-            toastr.info('Title is too short or too long, converted to default format!');
+            showInfo('Title is too short or too long, converted to default format!');
             title = from + ' - ' + to + ' [' + day.getDate() + '/' + ((day.getMonth() * 1) + 1) + '/' + day.getFullYear() + '] ' + ' (' + author + ')';
         }
 
