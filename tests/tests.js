@@ -158,8 +158,14 @@ describe('Validator tests with HTML reporter', function () {
 });
 
 describe('Controllers tests with HTML reporter', function () {
-
-    Parse.initialize("oXLbvSKFI0HQJAT5QCpStZbr0Lx5Upt4j6MJFh92", "KAtLgD0vTTYionS73fIxYY1XYWGedKaUgXvzFd26");
+    before(function () {
+        Parse.initialize("oXLbvSKFI0HQJAT5QCpStZbr0Lx5Upt4j6MJFh92", "KAtLgD0vTTYionS73fIxYY1XYWGedKaUgXvzFd26");
+    });
+    beforeEach(function () {
+        if (Parse.User.current()) {
+            Parse.User.logOut();
+        }
+    });
 
     describe('Controllers tests - userControllers.signIn', function () {
         it('Expect to log in when valid username and password are provided', function (done) {
@@ -190,22 +196,48 @@ describe('Controllers tests with HTML reporter', function () {
         });
     });
 
-//describe('Controllers tests - userControllers.signOut',function(){
-//    it('Expect to log out when logged in',function(done){
-//        Parse.User.logIn('antoan', '123456')
-//            .then(function () {
-//                userControllers.signOut();
-//            }, function (err) {
-//                utils.showError('Error ' + err.code + ': ' + err.message);
-//            });
-//
-//        setTimeout(function(){
-//            var user = Parse.User.current();
-//
-//            expect(user).to.eql(null);
-//            done();
-//        },1500);
-//    });
-//});
+    describe('Controllers tests - userControllers.signOut', function () {
+        it('Expect to log out when logged in', function (done) {
+            Parse.User.logIn('antoan', '123456')
+                .then(function () {
+                    userControllers.signOut();
+                }, function (err) {
+                    utils.showError('Error ' + err.code + ': ' + err.message);
+                });
+
+            setTimeout(function () {
+                var user = Parse.User.current();
+
+                expect(user).to.eql(null);
+                done();
+            }, 1500);
+        });
+    });
+
+    describe('Controllers tests - userControllers.signUp', function () {
+        //this.timeout(10000);
+
+        it('Expect to sign up, when valid input is presented', function (done) {
+            var username = 'unit_test',
+                fName = 'Unit',
+                lName = 'Test',
+                email = 'validemail@abv.bg',
+                password = 'validPassword';
+
+            userControllers.signUp(username, fName, lName, email, password);
+
+            Parse.User.logIn(username, password)
+                .then(function () {
+                    var user = Parse.User.current();
+                    var actual = user.get("username");
+
+                    expect(actual).to.eql(username);
+
+                    Parse.User.logOut();
+                    done();
+                }
+            )
+        });
+    });
 });
 
