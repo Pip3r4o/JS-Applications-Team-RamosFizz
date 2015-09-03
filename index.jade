@@ -3,6 +3,7 @@ html
         meta(charset="utf-8")
         title Sharing is Caring - The travel sharing App
         link(rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css")
+        link(rel="stylesheet" href="css/bootstrap-yeti.css")
         link(rel="stylesheet" href="node_modules/toastr/build/toastr.css")
         link(rel="stylesheet" href="css/styles.css")
         script(type="text/javascript" src="bower_components/system.js/dist/system.js")
@@ -18,18 +19,20 @@ html
         script (function(d, s, id) {var js, fjs = d.getElementsByTagName(s)[0];if (d.getElementById(id)) return;js = d.createElement(s); js.id = id;js.src = "//connect.facebook.net/bg_BG/sdk.js#xfbml=1&version=v2.4";fjs.parentNode.insertBefore(js, fjs);}(document, 'script', 'facebook-jssdk'))
 
         div#header
-            div.blog-masthead.navbar-fixed-top
-                div.container
-                     nav.blog-nav
-                        .container
-                            .pull-left
-                                a(href="#posts").blog-nav-item.active#posts Posts
-                                a(href="#makepost").blog-nav-item#makepost Create Post
-                            .pull-right#user-nav
-                                a(href="#user").blog-nav-item#userProfile
-                                a(href="#").btn.btn-info.btn-sm#btnsgnout
-                                    span.glyphicon.glyphicon-log-out
-
+            nav(role='navigation').navbar.navbar-inverse.navbar-fixed-top
+                div.navbar-header
+                    a(href='#/posts').navbar-brand Sharing is Caring
+                div
+                    ul.nav.navbar-nav
+                        li.active
+                            a(href='#/posts') Posts
+                        li
+                            a(href='#/makepost') Offer a trip
+                div.pull-right#user-nav
+                    p.navbar-text Welcome,
+                        a(href="#/user").blog-nav-item#userProfile
+                        a(href="#/").btn.btn-info.btn-sm#btnsgnout
+                            span.glyphicon.glyphicon-log-out
 
         div#mainWindow
             div#mainContent
@@ -59,7 +62,7 @@ html
                                     span.white {{this.attributes.day}}
                             .col-md-2
                                 p Seats:
-                                    span.white {{this.attributes.seats}}
+                                    span.white.label-success {{this.attributes.seats}}
                             .col-md-2
                                 p Price:
                                     span.white {{this.attributes.price}}
@@ -86,7 +89,7 @@ html
                                     span.white {{this.attributes.day}}
                             .col-md-2
                                 p Seats:
-                                    span.white {{this.attributes.seats}}
+                                    span.white.label-success {{this.attributes.seats}}
                             .col-md-2
                                 p Price:
                                     span.white {{this.attributes.price}}
@@ -99,8 +102,8 @@ html
         div#footer
             footer.footer.clearfix
                 .container
-                    p.text-center Created by team Ramos Fizz @Telerik Academy 2015-2016
-                    p.text-center Powered by Bootstrap, jQuery, Parse JS SDK
-                    div.fb-like(data-href="http://telerikacademy.com/" data-width="30" data-layout="box_count" data-action="like" data-show-faces="true" data-share="true")
+                    p.text-center.white Created by team Ramos Fizz @Telerik Academy 2015-2016
+                    p.text-center.white Powered by Bootstrap, jQuery, Parse JS SDK
+                    div.fb-like(data-href="http://telerikacademy.com/" data-width="30" data-layout="box_count" data-action="like" data-show-faces="true")
 
 

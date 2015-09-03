@@ -9,9 +9,10 @@ var renderer = (function () {
 
     function registerView() {
         $('#mainContent').load('partials/register.html', function () {
-            $('#signup').submit(function () {
+            $('#signup').submit(function (e) {
                 var input = getInputWhenSigningUp();
                 userControllers.signUp(input.username, input.fName, input.lName, input.email, input.password);
+                e.preventDefault();
             });
             $('#btnsgnin').click(loginView);
         });
@@ -19,10 +20,11 @@ var renderer = (function () {
 
     function loginView() {
         $('#mainContent').load('partials/login.html', function () {
-            $('#signin').submit(function(){
+            $('#signin').submit(function(e){
                 var input=getInputWhenLoggingIn();
                 userControllers.signIn(input.username,input.password);
-            });
+                e.preventDefault();
+            });s
 
             $('#btnrgstr').click(registerView);
         });
@@ -65,6 +67,8 @@ var renderer = (function () {
 
         var $container = $('<div />').addClass('container');
 
+        var $title = $('<h2 />').html('Find other people to travel with!').addClass('white title').appendTo($container);
+
         var $filterRevealButton = $('<button />').addClass('btn btn-primary btn-md center-block').html('Filter').appendTo($container);
 
         var $filter = $('<div />').attr('id', 'filter').addClass('container panel-body').css('display',
@@ -103,9 +107,10 @@ var renderer = (function () {
                 $('#createpostcntnr form').trigger('reset');
             });
             setInitialDateToUI();
-            $('#createpostcntnr').on('submit', function () {
+            $('#createpostcntnr').on('submit', function (e) {
                 var input = getInputWhenCreatingPost();
                 controllers.createPost(input.author, input.title, input.contact, input.from, input.to, input.day, input.seats, input.price);
+                e.preventDefault();
             });
         });
     }

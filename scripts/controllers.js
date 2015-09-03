@@ -39,7 +39,7 @@ var controllers = (function() {
                 user.attributes.otherTrips.push(post.id);
                 user.save();
                 utils.showInfo('You reserved a seat on trip: ' + post.get('title'));
-                location.assign('#user');
+                location.assign('/#user');
             });
         }, function (err) {
             utils.showError('An error occured while fetching the post. Please try again later!');
@@ -99,7 +99,7 @@ var controllers = (function() {
         var post = new Post();
         post.create(author, title, contact, from, to, day, seats, price);
 
-        location.assign('#posts');
+        location.assign('#/posts');
 
         return false;
     }

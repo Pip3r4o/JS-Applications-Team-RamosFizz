@@ -10,14 +10,14 @@ var userControllers = (function () {
             Parse.User.logIn(username, password)
                 .then(function () {
                     utils.showSuccess('Successfully logged in!');
-                    location.assign('#posts');
+                    location.assign('#/posts');
                     showUserControls();
                 }, function (err) {
                     utils.showError('Error ' + err.code + ': ' + err.message);
                 });
         } else {
             utils.showInfo('You are already logged in!');
-            location.assign('#posts');
+            location.assign('#/posts');
         }
 
         return false;
@@ -28,7 +28,7 @@ var userControllers = (function () {
     }
 
     function showUserControls() {
-        $('#userProfile').html(Parse.User.current().get('username') + '\'s posts');
+        $('#userProfile').html(Parse.User.current().get('username'));
         $('#user-nav').show();
     }
 
@@ -63,7 +63,7 @@ var userControllers = (function () {
         })
             .then(function () {
                 utils.showSuccess('Successfully signed up!');
-                location.assign('#post');
+                location.assign('/#post');
                 showUserControls();
             },
             function (err) {

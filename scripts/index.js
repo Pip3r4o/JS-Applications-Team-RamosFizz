@@ -35,28 +35,24 @@ import userControllers from './userControllers.js'
     } else {
         userControllers.showUserControls();
 
-        if (location.hash !== '#posts') {
-            location.assign('#posts');
+        if (location.hash !== '#/posts') {
+            location.assign('#/posts');
         } else {
             renderer.postsView();
         }
     }
 
     function locationHashChanged() {
-        $('.blog-nav-item').removeClass('active');
-
         if (!Parse.User.current()) {
-            location.assign('#');
+            location.assign('#/');
             return;
         }
-        if (location.hash === "#posts") {
+        if (location.hash === "#/posts") {
             renderer.postsView();
-        } else if (location.hash === "#makepost") {
+        } else if (location.hash === "#/makepost") {
             renderer.createPostView();
-        } else if (location.hash === '#user') {
+        } else if (location.hash === '#/user') {
             renderer.userView();
-        } else if (location.hash === '#login') {
-            renderer.loginView();
         } else {
             renderer.postsView();
         }
