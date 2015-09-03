@@ -2,7 +2,6 @@
 var validator=require('../scripts/validator.js');
 var expect=require('chai').expect;
 
-console.log(validator)
 
 describe('Validator tests - postCreationValidation.destinationValidation',function(){
     it('Expect to return false, when user has chose same city names',function(){

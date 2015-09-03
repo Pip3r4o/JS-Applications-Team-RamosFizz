@@ -5,7 +5,9 @@ import userControllers from './userControllers.js';
 import utils from './utils.js'
 
 var renderer = (function () {
-    var sgnOutBtn = $('#btnsgnout').click(userControllers.signOut);
+    if(userControllers!==undefined){
+        var sgnOutBtn = $('#btnsgnout').click(userControllers.signOut);
+    }
 
     function registerView() {
         $('#mainContent').load('partials/register.html', function () {

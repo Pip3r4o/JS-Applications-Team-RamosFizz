@@ -1,6 +1,7 @@
-/**
- * Created by Antoan on 9/2/2015.
- */
+import userControllers from  'scripts/userControllers.js';
+import {Parse} from 'bower_components/parse-1.5.0/index.js';
+import renderer from 'scripts/renderer.js'
+import validator from 'scripts/validator.js'
 
 describe('Validator tests - postCreationValidation.destinationValidation',function(){
     it('Expect to return false, when user has chose same city names',function(){
@@ -154,4 +155,54 @@ describe('Validator tests - userRegistrationValidation.usernameValidation',funct
         expect(actual).to.be.false;
     });
 });
+
+Parse.initialize("oXLbvSKFI0HQJAT5QCpStZbr0Lx5Upt4j6MJFh92", "KAtLgD0vTTYionS73fIxYY1XYWGedKaUgXvzFd26");
+
+describe('Controllers tests - userControllers.signIn',function(){
+    it('Expect to log in when valid username and password are provided',function(done){
+        userControllers.signIn('antoan','123456');
+
+        setTimeout(function(){
+            var user = Parse.User.current();
+            var actual= user.get("username");
+
+            expect(actual).to.eql('antoan');
+
+            Parse.User.logOut();
+            done();
+        },1500);
+    });
+
+    it('Expect not to log in when invalid username and password are provided',function(done){
+        userControllers.signIn('invalid','123456');
+
+        setTimeout(function(){
+            var actual = Parse.User.current();
+
+            expect(actual).to.eql(null);
+
+            Parse.User.logOut();
+            done();
+        },1500);
+    });
+});
+
+//describe('Controllers tests - userControllers.signOut',function(){
+//    it('Expect to log out when logged in',function(done){
+//        Parse.User.logIn('antoan', '123456')
+//            .then(function () {
+//                userControllers.signOut();
+//            }, function (err) {
+//                utils.showError('Error ' + err.code + ': ' + err.message);
+//            });
+//
+//        setTimeout(function(){
+//            var user = Parse.User.current();
+//
+//            expect(user).to.eql(null);
+//            done();
+//        },1500);
+//    });
+//});
+
 

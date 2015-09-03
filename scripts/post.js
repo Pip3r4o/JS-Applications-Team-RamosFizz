@@ -1,4 +1,5 @@
-import utils from './utils.js'
+import utils from './utils.js';
+Parse.initialize("oXLbvSKFI0HQJAT5QCpStZbr0Lx5Upt4j6MJFh92", "KAtLgD0vTTYionS73fIxYY1XYWGedKaUgXvzFd26");
 
 var Post = function() {
     var post = Parse.Object.extend('Post', {
