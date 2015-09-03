@@ -1,6 +1,4 @@
-/**
- * Created by Antoan on 8/30/2015.
- */
+
 System.config({
     transpiler:'babel',
     map:{
