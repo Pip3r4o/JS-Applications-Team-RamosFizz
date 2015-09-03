@@ -12,7 +12,7 @@ var controllers = (function() {
             console.log(msg);
         }
         else{
-            toastr.info(msg)
+            toastr.info(msg);
         }
     }
 
@@ -21,7 +21,7 @@ var controllers = (function() {
             console.log(msg);
         }
         else{
-            toastr.info(msg)
+            toastr.error(msg);
         }
     }
 
