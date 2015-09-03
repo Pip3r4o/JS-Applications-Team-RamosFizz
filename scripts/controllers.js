@@ -17,7 +17,7 @@ var controllers = (function() {
 
         query.get(postID).then(function (post) {
             if (post.get('user').id === user.id) {
-                utils.Error('You cannot reserve a seat for yourself on your own post!');
+                utils.showError('You cannot reserve a seat for yourself on your own post!');
                 return;
             }
             if (!user.get('otherTrips')) {
@@ -39,7 +39,7 @@ var controllers = (function() {
                 user.attributes.otherTrips.push(post.id);
                 user.save();
                 utils.showInfo('You reserved a seat on trip: ' + post.get('title'));
-                location.assign('/#user');
+                location.assign('#/user');
             });
         }, function (err) {
             utils.showError('An error occured while fetching the post. Please try again later!');

@@ -24,7 +24,7 @@ var renderer = (function () {
                 var input=getInputWhenLoggingIn();
                 userControllers.signIn(input.username,input.password);
                 e.preventDefault();
-            });s
+            });
 
             $('#btnrgstr').click(registerView);
         });

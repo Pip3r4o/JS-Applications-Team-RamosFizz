@@ -1,41 +1,37 @@
-/**
- * Created by Antoan on 9/3/2015.
- */
+var utils = (function () {
+    var isTesting = false;
 
-var utils=(function(){
-    var isTesting=false;
-
-    function showInfo(msg){
-        if(isTesting){
-            console.log('info: '+ msg);
+    function showInfo(msg) {
+        if (isTesting) {
+            console.log('info: ' + msg);
         }
-        else{
+        else {
             toastr.info(msg);
         }
     }
 
-    function showError(msg){
-        if(isTesting){
-            console.log('error: '+msg);
+    function showError(msg) {
+        if (isTesting) {
+            console.log('error: ' + msg);
         }
-        else{
+        else {
             toastr.error(msg);
         }
     }
 
-    function showSuccess(msg){
-        if(isTesting){
-            console.log('success '+msg);
+    function showSuccess(msg) {
+        if (isTesting) {
+            console.log('success ' + msg);
         }
-        else{
+        else {
             toastr.success(msg);
         }
     }
 
-    return{
-        showError:showError,
-        showInfo:showInfo,
-        showSuccess:showSuccess
+    return {
+        showError: showError,
+        showInfo: showInfo,
+        showSuccess: showSuccess
     }
 })();
 
