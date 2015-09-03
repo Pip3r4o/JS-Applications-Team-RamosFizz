@@ -330,3 +330,7 @@ form label {
     margin: 0 auto;
     margin-bottom: 10px;
 }
+
+footer {
+    padding-bottom: 30px;
+}
