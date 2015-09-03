@@ -2,24 +2,21 @@
 
 import validator from './validator.js';
 import renderer from './renderer.js';
+import utils from './utils.js';
 
 var userControllers = (function () {
-    function signIn() {
-        var username = $('#inputUsername').val().toLowerCase(),
-            password = $('#inputPassword').val();
-
+    function signIn(username,password) {
         if (!Parse.User.current()) {
             Parse.User.logIn(username, password)
                 .then(function () {
-                    toastr.success('Successfully logged in!');
+                    utils.showSuccess('Successfully logged in!');
                     location.assign('#posts');
                     showUserControls();
                 }, function (err) {
-                    console.log(err);
-                    toastr.error('Error ' + err.code + ': ' + err.message);
+                    utils.showError('Error ' + err.code + ': ' + err.message);
                 });
         } else {
-            toastr.info('You are already logged in!');
+            utils.showInfo('You are already logged in!');
             location.assign('#posts');
         }
 
@@ -35,25 +32,19 @@ var userControllers = (function () {
         $('#user-nav').show();
     }
 
-    function signUp() {
-        var username = $('#registerUsername').val(),
-            fName    = $('#registerFName').val(),
-            lName    = $('#registerLName').val(),
-            email    = $('#registerEmail').val(),
-            password = $('#registerPassword').val();
-
+    function signUp(username,fName,lName,email,password) {
         if (!validator.userRegistrationValidation.emailValidation(email)) {
-            toastr.error('Invalid email format. Please enter a valid email!');
+            utils.showSuccess('Invalid email format. Please enter a valid email!');
             return false;
         }
 
         if (!validator.userRegistrationValidation.passwordLengthValidation(password)) {
-            toastr.error('Password must contain 6 or more characters');
+            utils.showSuccess('Password must contain 6 or more characters');
             return false;
         }
 
         if (!validator.userRegistrationValidation.usernameValidation(username)) {
-            toastr.error('Username must be between 8 and 20 characters and contain alphanumeric characters, underscores (_) or dots (.)');
+            utils.showSuccess('Username must be between 8 and 20 characters and contain alphanumeric characters, underscores (_) or dots (.)');
             return false;
         }
 
@@ -71,13 +62,12 @@ var userControllers = (function () {
             lName: credentials.lName
         })
             .then(function () {
-                toastr.success('Successfully signed up!');
+                utils.showSuccess('Successfully signed up!');
                 location.assign('#post');
                 showUserControls();
             },
             function (err) {
-                console.log(err);
-                toastr.error('Error ' + err.code + ': ' + err.message);
+                utils.showError('Error ' + err.code + ': ' + err.message);
             });
 
         return false;
@@ -86,12 +76,12 @@ var userControllers = (function () {
     function signOut() {
         Parse.User.logOut().then(
             function () {
-                toastr.success('You successfully logged out!');
+                utils.showSuccess('You successfully logged out!');
                 hideUserControls();
                 renderer.loginView();
             },
             function () {
-                toastr.error('There was an error while logging out! :(');
+                utils.showError('There was an error while logging out! :(');
             });
     }
 

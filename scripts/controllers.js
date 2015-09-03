@@ -3,28 +3,9 @@
 import validator from './validator.js';
 import renderer from './renderer.js';
 import Post from './post.js';
+import utils from './utils.js';
 
 var controllers = (function() {
-    var isTesting=false;
-
-    function showInfo(msg){
-        if(isTesting){
-            console.log(msg);
-        }
-        else{
-            toastr.info(msg);
-        }
-    }
-
-    function showError(msg){
-        if(isTesting){
-            console.log(msg);
-        }
-        else{
-            toastr.error(msg);
-        }
-    }
-
     function reserveSeat(ev) {
         var tar = ev.target;
 
@@ -36,7 +17,7 @@ var controllers = (function() {
 
         query.get(postID).then(function (post) {
             if (post.get('user').id === user.id) {
-                showError('You cannot reserve a seat for yourself on your own post!');
+                utils.Error('You cannot reserve a seat for yourself on your own post!');
                 return;
             }
             if (!user.get('otherTrips')) {
@@ -46,7 +27,7 @@ var controllers = (function() {
                 post.set('usersTraveling', []);
             }
             if (user.get('otherTrips').indexOf(post.id) >= 0) {
-                showError('You have already reserved a seat for this particular trip!');
+                utils.showError('You have already reserved a seat for this particular trip!');
                 return;
             }
 
@@ -57,11 +38,11 @@ var controllers = (function() {
             post.save().then(function () {
                 user.attributes.otherTrips.push(post.id);
                 user.save();
-                showInfo('You reserved a seat on trip: ' + post.get('title'));
+                utils.showInfo('You reserved a seat on trip: ' + post.get('title'));
                 location.assign('#user');
             });
         }, function (err) {
-            showError('An error occured while fetching the post. Please try again later!');
+            utils.showError('An error occured while fetching the post. Please try again later!');
             console.log(err);
         });
     }
@@ -93,37 +74,25 @@ var controllers = (function() {
         $('#mainContent').append(template(data));
     }
 
-    function createPost() {
-        var author  = Parse.User.current().get('username'),
-            title   = $('#titleinpt').val(),
-            contact = $('#contactinpt').val(),
-            from    = $('#fromslct option:selected').text(),
-            to      = $('#toslct option:selected').text(),
-            day     = new Date($('#yy option:selected').text(),
-                ($('#mm option:selected').text() * 1) - 1,
-                $('#dd option:selected').text(),
-                $('#hourslct option:selected').text(),
-                $('#minuteslct option:selected').text(), 0),
-            seats   = ($('#seatsslct option:selected').text() * 1),
-            price   = $('#priceslct option:selected').text();
 
+    function createPost(author,title,contact,from,to,day,seats,price) {
         if (!validator.postCreationValidation.mobileNumberValidation(contact)) {
-            showError('Mobile number is not in a valid BG format!');
+            utils.showError('Mobile number is not in a valid BG format!');
             return false;
         }
 
         if (!validator.postCreationValidation.destinationValidation(from, to)) {
-            showError('You must travel from/to a town different to the place of departure!');
+            utils.showError('You must travel from/to a town different to the place of departure!');
             return false;
         }
 
         if (!validator.postCreationValidation.dateValidation(day)) {
-            showError('You cannot create a post that is due previous date!');
+            utils.showError('You cannot create a post that is due previous date!');
             return false;
         }
 
         if (!validator.postCreationValidation.titleValidation(title)) {
-            showInfo('Title is too short or too long, converted to default format!');
+            utils.showInfo('Title is too short or too long, converted to default format!');
             title = from + ' - ' + to + ' [' + day.getDate() + '/' + ((day.getMonth() * 1) + 1) + '/' + day.getFullYear() + '] ' + ' (' + author + ')';
         }
 

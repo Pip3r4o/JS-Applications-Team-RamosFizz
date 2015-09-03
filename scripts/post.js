@@ -1,3 +1,5 @@
+import utils from './utils.js'
+
 var Post = function() {
     var post = Parse.Object.extend('Post', {
         create: function (author, title, contact, from, to, day, seats, price) {
@@ -15,11 +17,11 @@ var Post = function() {
                 'usersTraveling': []
             }, {
                 success: function (post) {
-                    toastr.info('You added a new post: ' + post.get('title'));
+                    utils.showInfo('You added a new post: ' + post.get('title'));
                 },
                 error: function (post, error) {
-                    toastr.error(post);
-                    toastr.error(error);
+                    utils.showError(post);
+                    utils.showError(error);
                 }
             });
         }

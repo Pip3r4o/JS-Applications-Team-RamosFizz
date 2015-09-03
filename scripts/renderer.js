@@ -2,34 +2,37 @@
 
 import controllers from './controllers.js';
 import userControllers from './userControllers.js';
+import utils from './utils.js'
 
 var renderer = (function () {
     var sgnOutBtn = $('#btnsgnout').click(userControllers.signOut);
 
-    function setInitialDateToUI() {
-        $('#dd option:eq(' + (getCurrentDate().date - 1) + ')').attr('selected', true);
-        $('#mm option:eq(' + (getCurrentDate().month) + ')').attr('selected', true);
-    }
-
     function registerView() {
         $('#mainContent').load('partials/register.html', function () {
-            $('#signup').submit(userControllers.signUp);
+            $('#signup').submit(function () {
+                var input = getInputWhenSigningUp();
+                userControllers.signUp(input.username, input.fName, input.lName, input.email, input.password);
+            });
             $('#btnsgnin').click(loginView);
         });
     }
 
     function loginView() {
         $('#mainContent').load('partials/login.html', function () {
-            $('#signin').submit(userControllers.signIn);
+            $('#signin').submit(function(){
+                var input=getInputWhenLoggingIn();
+                userControllers.signIn(input.username,input.password);
+            });
+
             $('#btnrgstr').click(registerView);
         });
     }
 
     function filteredPostsView(e) {
         var fromSelect = $('#from-select-filter').val(),
-            toSelect   = $('#to-select-filter').val(),
-            userInput  = $('#filteredDriver').val(),
-            query      = new Parse.Query('Post'),
+            toSelect = $('#to-select-filter').val(),
+            userInput = $('#filteredDriver').val(),
+            query = new Parse.Query('Post'),
             data;
 
         e.preventDefault();
@@ -46,7 +49,7 @@ var renderer = (function () {
         query.find().then(function (res) {
             data = res;
             if (res.length === 0) {
-                toastr.info('There are no posts matching these parameters!');
+                utils.showInfo('There are no posts matching these parameters!');
                 return false;
             }
 
@@ -100,7 +103,10 @@ var renderer = (function () {
                 $('#createpostcntnr form').trigger('reset');
             });
             setInitialDateToUI();
-            $('#createpostcntnr').submit(controllers.createPost);
+            $('#createpostcntnr').on('submit', function () {
+                var input = getInputWhenCreatingPost();
+                controllers.createPost(input.author, input.title, input.contact, input.from, input.to, input.day, input.seats, input.price);
+            });
         });
     }
 
@@ -112,6 +118,11 @@ var renderer = (function () {
         getUpcomingPostsByUser();
         getPastPostsByUser();
         getOtherPostsOfUser();
+    }
+
+    function setInitialDateToUI() {
+        $('#dd option:eq(' + (getCurrentDate().date - 1) + ')').attr('selected', true);
+        $('#mm option:eq(' + (getCurrentDate().month) + ')').attr('selected', true);
     }
 
     function getUpcomingPostsByUser() {
@@ -164,11 +175,63 @@ var renderer = (function () {
         }
     }
 
+    function getInputWhenLoggingIn(){
+        var username = $('#inputUsername').val().toLowerCase(),
+            password = $('#inputPassword').val();
+
+        return {
+            username:username,
+            password:password
+        }
+    }
+
+    function getInputWhenSigningUp() {
+        var username = $('#registerUsername').val(),
+            fName = $('#registerFName').val(),
+            lName = $('#registerLName').val(),
+            email = $('#registerEmail').val(),
+            password = $('#registerPassword').val();
+
+        return {
+            username: username,
+            fName: fName,
+            lName: lName,
+            email: email,
+            password: password
+        }
+    }
+
+    function getInputWhenCreatingPost() {
+        var author = Parse.User.current().get('username'),
+            title = $('#titleinpt').val(),
+            contact = $('#contactinpt').val(),
+            from = $('#fromslct option:selected').text(),
+            to = $('#toslct option:selected').text(),
+            day = new Date($('#yy option:selected').text(),
+                ($('#mm option:selected').text() * 1) - 1,
+                $('#dd option:selected').text(),
+                $('#hourslct option:selected').text(),
+                $('#minuteslct option:selected').text(), 0),
+            seats = ($('#seatsslct option:selected').text() * 1),
+            price = $('#priceslct option:selected').text();
+
+        return {
+            author: author,
+            title: title,
+            contact: contact,
+            from: from,
+            to: to,
+            day: day,
+            seats: seats,
+            price: price
+        }
+    }
+
     function getCurrentDate() {
-        var date         = new Date(),
-            currentDate  = date.getDate(),
+        var date = new Date(),
+            currentDate = date.getDate(),
             currentMonth = date.getMonth(),
-            currentYear  = date.getFullYear();
+            currentYear = date.getFullYear();
         return {
             date: currentDate,
             month: currentMonth,
