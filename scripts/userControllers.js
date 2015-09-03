@@ -34,17 +34,17 @@ var userControllers = (function () {
 
     function signUp(username,fName,lName,email,password) {
         if (!validator.userRegistrationValidation.emailValidation(email)) {
-            utils.showSuccess('Invalid email format. Please enter a valid email!');
+            utils.showError('Invalid email format. Please enter a valid email!');
             return false;
         }
 
         if (!validator.userRegistrationValidation.passwordLengthValidation(password)) {
-            utils.showSuccess('Password must contain 6 or more characters');
+            utils.showError('Password must contain 6 or more characters');
             return false;
         }
 
         if (!validator.userRegistrationValidation.usernameValidation(username)) {
-            utils.showSuccess('Username must be between 8 and 20 characters and contain alphanumeric characters, underscores (_) or dots (.)');
+            utils.showError('Username must be between 8 and 20 characters and contain alphanumeric characters, underscores (_) or dots (.)');
             return false;
         }
 
@@ -63,7 +63,7 @@ var userControllers = (function () {
         })
             .then(function () {
                 utils.showSuccess('Successfully signed up!');
-                location.assign('/#post');
+                location.assign('#/post');
                 showUserControls();
             },
             function (err) {
@@ -91,7 +91,7 @@ var userControllers = (function () {
         signOut: signOut,
         hideUserControls: hideUserControls,
         showUserControls: showUserControls
-    }
+    };
 
 }());
 
