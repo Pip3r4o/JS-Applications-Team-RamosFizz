@@ -163,18 +163,54 @@ describe('Controllers tests with HTML reporter', function () {
         Parse.initialize("oXLbvSKFI0HQJAT5QCpStZbr0Lx5Upt4j6MJFh92", "KAtLgD0vTTYionS73fIxYY1XYWGedKaUgXvzFd26");
     });
     beforeEach(function () {
+        //Parse.MockDB.mockDB();
         if (Parse.User.current()) {
             Parse.User.logOut();
         }
+        //var Post = function() {
+        //    var post = Parse.Object.extend('Post', {
+        //        create: function (author, title, contact, from, to, day, seats, price) {
+        //            this.save({
+        //                'user': Parse.User.current(),
+        //                'author': author,
+        //                'title': title,
+        //                'contact': contact,
+        //                'from': from,
+        //                'to': to,
+        //                'day': day,
+        //                'seats': seats,
+        //                'price': price,
+        //                'otherTrips': [],
+        //                'usersTraveling': []
+        //            }, {
+        //                success: function (post) {
+        //                    utils.showInfo('You added a new post: ' + post.get('title'));
+        //                },
+        //                error: function (post, error) {
+        //                    utils.showError(post);
+        //                    utils.showError(error);
+        //                }
+        //            });
+        //        }
+        //    });
+        //
+        //    return post;
+        //}();
+
     });
+
+    //afterEach(function() {
+    //    Parse.MockDB.cleanUp();
+    //});
+
 
     describe('Controllers tests - userControllers.signUp', function () {
 
         it('Expect to sign up, when valid input is presented', function (done) {
-            var username = 'unit_test',
+            var username = 'unit_test' + new Date().getMilliseconds(),
                 fName = 'Unit',
                 lName = 'Test',
-                email = 'validemail@abv.bg',
+                email = 'validemail' + new Date().getMilliseconds() + '@abv.bg',
                 password = 'validPassword';
 
             userControllers.signUp(username, fName, lName, email, password);
@@ -253,6 +289,8 @@ describe('Controllers tests with HTML reporter', function () {
                 seats = 2,
                 price = 'Free';
 
+            day.setDate(day.getDate() + 1);
+
             Parse.User.logIn(username, password)
                 .then(function () {
                     controllers.createPost(author, title, contact, from, to, day, seats, price);
@@ -287,6 +325,7 @@ describe('Controllers tests with HTML reporter', function () {
                 seats = 2,
                 price = 'Free';
 
+            day.setDate(day.getDate() + 1);
             Parse.User.logIn(username, password)
                 .then(function () {
                     controllers.createPost(author, title, contact, from, to, day, seats, price);
@@ -300,8 +339,7 @@ describe('Controllers tests with HTML reporter', function () {
                     query.contains('contact', contact);
                     query.find().then(function (result) {
                         var actual = result;
-                        console.log(actual);
-                        setTimeout(function() {
+                        setTimeout(function () {
                             expect(actual.length).to.equal(1);
                             done();
                         }, 1000);
@@ -323,6 +361,7 @@ describe('Controllers tests with HTML reporter', function () {
                 day = new Date(),
                 seats = 2,
                 price = 'Free';
+            day.setDate(day.getDate() + 1);
 
             Parse.User.logIn(username, password)
                 .then(function () {
@@ -357,6 +396,7 @@ describe('Controllers tests with HTML reporter', function () {
                 day = new Date(),
                 seats = 2,
                 price = 'Free';
+            day.setDate(day.getDate() + 1);
 
             Parse.User.logIn(username, password)
                 .then(function () {
