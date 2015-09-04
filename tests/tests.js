@@ -1,6 +1,7 @@
 import userControllers from  'scripts/userControllers.js';
-import renderer from 'scripts/renderer.js'
-import validator from 'scripts/validator.js'
+import renderer from 'scripts/renderer.js';
+import validator from 'scripts/validator.js';
+import controllers from 'scripts/controllers.js';
 
 describe('Validator tests with HTML reporter', function () {
     describe('Validator tests - postCreationValidation.destinationValidation', function () {
@@ -162,20 +163,80 @@ describe('Controllers tests with HTML reporter', function () {
         Parse.initialize("oXLbvSKFI0HQJAT5QCpStZbr0Lx5Upt4j6MJFh92", "KAtLgD0vTTYionS73fIxYY1XYWGedKaUgXvzFd26");
     });
     beforeEach(function () {
+        //Parse.MockDB.mockDB();
         if (Parse.User.current()) {
             Parse.User.logOut();
         }
+        //var Post = function() {
+        //    var post = Parse.Object.extend('Post', {
+        //        create: function (author, title, contact, from, to, day, seats, price) {
+        //            this.save({
+        //                'user': Parse.User.current(),
+        //                'author': author,
+        //                'title': title,
+        //                'contact': contact,
+        //                'from': from,
+        //                'to': to,
+        //                'day': day,
+        //                'seats': seats,
+        //                'price': price,
+        //                'otherTrips': [],
+        //                'usersTraveling': []
+        //            }, {
+        //                success: function (post) {
+        //                    utils.showInfo('You added a new post: ' + post.get('title'));
+        //                },
+        //                error: function (post, error) {
+        //                    utils.showError(post);
+        //                    utils.showError(error);
+        //                }
+        //            });
+        //        }
+        //    });
+        //
+        //    return post;
+        //}();
+
+    });
+
+    //afterEach(function() {
+    //    Parse.MockDB.cleanUp();
+    //});
+
+
+    describe('Controllers tests - userControllers.signUp', function () {
+
+        it('Expect to sign up, when valid input is presented', function (done) {
+            var username = 'unit_test' + new Date().getMilliseconds(),
+                fName = 'Unit',
+                lName = 'Test',
+                email = 'validemail' + new Date().getMilliseconds() + '@abv.bg',
+                password = 'validPassword';
+
+            userControllers.signUp(username, fName, lName, email, password);
+
+            Parse.User.logIn(username, password)
+                .then(function () {
+                    var user = Parse.User.current();
+                    var actual = user.get("username");
+
+                    expect(actual).to.eql(username);
+                    Parse.User.logOut();
+                    done();
+                }
+            )
+        });
     });
 
     describe('Controllers tests - userControllers.signIn', function () {
         it('Expect to log in when valid username and password are provided', function (done) {
-            userControllers.signIn('antoan', '123456');
+            userControllers.signIn('unit_test', 'validPassword');
 
             setTimeout(function () {
                 var user = Parse.User.current();
                 var actual = user.get("username");
 
-                expect(actual).to.eql('antoan');
+                expect(actual).to.eql('unit_test');
 
                 Parse.User.logOut();
                 done();
@@ -198,7 +259,7 @@ describe('Controllers tests with HTML reporter', function () {
 
     describe('Controllers tests - userControllers.signOut', function () {
         it('Expect to log out when logged in', function (done) {
-            Parse.User.logIn('antoan', '123456')
+            Parse.User.logIn('unit_test', 'validPassword')
                 .then(function () {
                     userControllers.signOut();
                 }, function (err) {
@@ -214,30 +275,148 @@ describe('Controllers tests with HTML reporter', function () {
         });
     });
 
-    describe('Controllers tests - userControllers.signUp', function () {
-        //this.timeout(10000);
+    describe('Controllers tests - controllers.createPost', function () {
 
-        it('Expect to sign up, when valid input is presented', function (done) {
+        it('Expect to create a post, when valid input is entered', function (done) {
             var username = 'unit_test',
-                fName = 'Unit',
-                lName = 'Test',
-                email = 'validemail@abv.bg',
-                password = 'validPassword';
+                password = 'validPassword',
+                author = 'Mbyte',
+                title = 'thisIsJustATest' + new Date().getMilliseconds(),
+                contact = '0888876876',
+                from = 'Sofia',
+                to = 'Varna',
+                day = new Date(),
+                seats = 2,
+                price = 'Free';
 
-            userControllers.signUp(username, fName, lName, email, password);
+            day.setDate(day.getDate() + 1);
 
             Parse.User.logIn(username, password)
                 .then(function () {
-                    var user = Parse.User.current();
-                    var actual = user.get("username");
+                    controllers.createPost(author, title, contact, from, to, day, seats, price);
+                }, function (err) {
+                    utils.showError('Error ' + err.code + ': ' + err.message);
+                })
+                .then(function () {
+                    var query = new Parse.Query('Post');
+                    query.contains('author', author);
+                    query.contains('title', title);
+                    query.contains('contact', contact);
+                    query.find().then(function (result) {
+                        var actual = result;
+                        expect(actual.length).to.equal(1);
+                        done();
+                    });
+                }, function (err) {
+                    utils.showError('Error ' + err.code + ': ' + err.message);
+                });
+        });
 
-                    expect(actual).to.eql(username);
 
-                    Parse.User.logOut();
-                    done();
-                }
-            )
+        it('Expect to create a post with default title, when invalid title is entered', function (done) {
+            var username = 'unit_test',
+                password = 'validPassword',
+                author = 'Mbyte',
+                title = 'Test' + new Date().getMilliseconds(),
+                contact = '0888876876',
+                from = 'Sofia',
+                to = 'Varna',
+                day = new Date(),
+                seats = 2,
+                price = 'Free';
+
+            day.setDate(day.getDate() + 1);
+            Parse.User.logIn(username, password)
+                .then(function () {
+                    controllers.createPost(author, title, contact, from, to, day, seats, price);
+                }, function (err) {
+                    utils.showError('Error ' + err.code + ': ' + err.message);
+                })
+                .then(function () {
+                    var query = new Parse.Query('Post');
+                    query.contains('author', author);
+                    query.contains('title', (from + ' - ' + to + ' [' + day.getDate() + '/' + ((day.getMonth() * 1) + 1) + '/' + day.getFullYear() + '] ' + ' (' + author + ')'));
+                    query.contains('contact', contact);
+                    query.find().then(function (result) {
+                        var actual = result;
+                        setTimeout(function () {
+                            expect(actual.length).to.equal(1);
+                            done();
+                        }, 1000);
+                    });
+                }, function (err) {
+                    utils.showError('Error ' + err.code + ': ' + err.message);
+                });
+        });
+
+        it('Expect to not create a post, when same city is entered as start and end destination', function (done) {
+
+            var username = 'unit_test',
+                password = 'validPassword',
+                author = 'Mbyte',
+                title = 'Test' + new Date().getMilliseconds(),
+                contact = '0888876876',
+                from = 'Sofia',
+                to = 'Sofia',
+                day = new Date(),
+                seats = 2,
+                price = 'Free';
+            day.setDate(day.getDate() + 1);
+
+            Parse.User.logIn(username, password)
+                .then(function () {
+                    controllers.createPost(author, title, contact, from, to, day, seats, price);
+                }, function (err) {
+                    utils.showError('Error ' + err.code + ': ' + err.message);
+                })
+                .then(function () {
+                    var query = new Parse.Query('Post');
+                    query.contains('author', author);
+                    query.contains('title', title);
+                    query.contains('from', from);
+                    query.find().then(function (result) {
+                        var actual = result;
+                        expect(actual.length).to.equal(0);
+                        done();
+                    });
+                }, function (err) {
+                    utils.showError('Error ' + err.code + ': ' + err.message);
+                });
+        });
+
+        it('Expect to not create a post, when invalid contact is entered', function (done) {
+
+            var username = 'unit_test',
+                password = 'validPassword',
+                author = 'Mbyte',
+                title = 'Test' + new Date().getMilliseconds(),
+                contact = '6876',
+                from = 'Sofia',
+                to = 'Varna',
+                day = new Date(),
+                seats = 2,
+                price = 'Free';
+            day.setDate(day.getDate() + 1);
+
+            Parse.User.logIn(username, password)
+                .then(function () {
+                    controllers.createPost(author, title, contact, from, to, day, seats, price);
+                }, function (err) {
+                    utils.showError('Error ' + err.code + ': ' + err.message);
+                })
+                .then(function () {
+                    var query = new Parse.Query('Post');
+                    query.contains('author', author);
+                    query.contains('title', title);
+                    query.contains('from', from);
+                    query.find().then(function (result) {
+                        var actual = result;
+                        expect(actual.length).to.equal(0);
+                        done();
+                    });
+                }, function (err) {
+                    utils.showError('Error ' + err.code + ': ' + err.message);
+                });
         });
     });
 });
-
